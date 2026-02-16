@@ -44,19 +44,31 @@ echo "✅ [SUCCESS]: No empty files detected."
 
 # 2. PRETTIER (format check)
 echo "🎨 [STEP 2]: Checking code style (Prettier)..."
-if ! pnpm exec prettier --check . 2>/dev/null; then
-  echo "🛑 [SYSTEM FAULT]: Prettier check failed. Run 'pnpm run format' to fix."
-  exit 1
+if ! pnpm run format:check 2>/dev/null; then
+  echo "💾 [AUTO-REPAIR]: Running 'pnpm run format'..."
+  pnpm run format
+  if pnpm run format:check 2>/dev/null; then
+    echo "✅ [SUCCESS]: Code style fixed. Stage the changes and commit before pushing."
+    exit 1
+  else
+    echo "🛑 [SYSTEM FAULT]: Prettier check still failed after format."
+    exit 1
+  fi
 fi
 echo "✅ [SUCCESS]: Code style OK."
 
 # 3. LINT (ESLint)
 echo "🧪 [STEP 3]: Linting..."
-if pnpm run lint 2>/dev/null; then
-  echo "✅ [SUCCESS]: Lint passed."
-else
-  echo "🛑 [SYSTEM FAULT]: Lint failed. Run 'pnpm run lint:fix' to auto-fix what you can."
-  exit 1
+if ! pnpm run lint 2>/dev/null; then
+  echo "💾 [AUTO-REPAIR]: Running 'pnpm run lint:fix'..."
+  pnpm run lint:fix
+  if pnpm run lint 2>/dev/null; then
+    echo "✅ [SUCCESS]: Lint fixed. Stage the changes and commit before pushing."
+    exit 1
+  else
+    echo "🛑 [SYSTEM FAULT]: Lint still failed after fix."
+    exit 1
+  fi
 fi
 echo "✅ [SUCCESS]: Lint passed."
 
