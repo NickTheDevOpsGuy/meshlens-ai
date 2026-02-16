@@ -68,7 +68,7 @@ if ! pnpm exec tsc --noEmit -p apps/web -p apps/api -p packages/shared 2>/dev/nu
 fi
 echo "✅ [SUCCESS]: Types are verified."
 
-# 4. UNIT TESTS (Vitest)
+# 5. UNIT TESTS (Vitest)
 echo "🧪 [STEP 5]: Running unit tests (Vitest)..."
 if ! pnpm run test; then
   echo "🛑 [SYSTEM FAULT]: Unit tests failed. Fix the red dots!"

@@ -6,8 +6,22 @@ import { cors } from "hono/cors";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isVercel = !!process.env.VERCEL;
-// Use path relative to this file so it works in both Node and Vercel (any cwd)
-const SAMPLES_DIR = path.resolve(__dirname, "../../../samples/incidents");
+// On Vercel: process.cwd() may be apps/web (root dir) or repo root; try both
+// Locally: use path relative to this file
+function resolveSamplesDir(): string {
+  if (!isVercel) return path.resolve(__dirname, "../../../samples/incidents");
+  const cwd = process.cwd();
+  const candidates = [
+    path.join(cwd, "public", "samples", "incidents"),
+    path.join(cwd, "apps", "web", "public", "samples", "incidents"),
+    path.join(cwd, "samples", "incidents"),
+  ];
+  for (const dir of candidates) {
+    if (fs.existsSync(dir)) return dir;
+  }
+  return candidates[0]; // fallback; loadIncidentsFromFolder handles missing dir
+}
+const SAMPLES_DIR = resolveSamplesDir();
 
 let samplesVersion = 0;
 if (!isVercel && fs.existsSync(SAMPLES_DIR)) {

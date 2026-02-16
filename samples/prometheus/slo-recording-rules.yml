@@ -1,0 +1,29 @@
+# Meshlens AI - Prometheus SLO Recording Rules
+# Add this to your Prometheus configuration for pre-computed SLO metrics.
+# See docs/prometheus-slo-recording-rules.md for usage.
+
+groups:
+  - name: meshlens-slo
+    interval: 1m
+    rules:
+      - record: slo:istio_error_rate:5m
+        expr: |
+          sum(rate(istio_requests_total{reporter="destination",response_code=~"5.."}[5m]))
+          / sum(rate(istio_requests_total{reporter="destination"}[5m]))
+          * 100
+        labels:
+          slo: "error_rate"
+
+      - record: slo:istio_request_rate:5m
+        expr: sum(rate(istio_requests_total{reporter="destination"}[5m]))
+        labels:
+          slo: "request_rate"
+
+      - record: slo:availability:5m
+        expr: |
+          1 - (
+            sum(rate(istio_requests_total{reporter="destination",response_code=~"5.."}[5m]))
+            / sum(rate(istio_requests_total{reporter="destination"}[5m]))
+          )
+        labels:
+          slo: "availability"

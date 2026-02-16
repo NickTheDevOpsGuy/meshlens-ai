@@ -20,13 +20,14 @@ When service mesh incidents happen—cascading failures, timeout storms, config 
 
 In the app, open **Docs** in the nav or go to `/docs`. On GitHub, browse the markdown files:
 
-| Page                                    | Description                                             |
-| --------------------------------------- | ------------------------------------------------------- |
-| [Getting Started](./getting-started.md) | Install, run, and first steps                           |
-| [Configuration](./configuration.md)     | TARS, Prometheus, Jaeger, Alertmanager, Slack/PagerDuty |
-| [Incidents & Import](./incidents.md)    | Sample data, import, incident lifecycle                 |
-| [Runbooks](./runbooks.md)               | Runbook links and templates                             |
-| [Deployment](./deployment.md)           | Vercel deployment                                       |
+| Page                                                                  | Description                                             |
+| --------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Getting Started](./getting-started.md)                               | Install, run, and first steps                           |
+| [Configuration](./configuration.md)                                   | TARS, Prometheus, Jaeger, Alertmanager, Slack/PagerDuty |
+| [Incidents & Import](./incidents.md)                                  | Sample data, import, incident lifecycle                 |
+| [Runbooks](./runbooks.md)                                             | Runbook links and templates                             |
+| [Deployment](./deployment.md)                                         | Vercel deployment                                       |
+| [Prometheus SLO Recording Rules](./prometheus-slo-recording-rules.md) | Pre-compute SLO metrics for better performance          |
 
 ---
 

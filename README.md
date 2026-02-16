@@ -28,7 +28,7 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🖼 Preview
 
-> 📸 _Add screenshots: `./apps/web/public/preview.png` or record a short GIF of the Dashboard and Incident Detail flow._
+![Meshlens AI Dashboard](./apps/web/public/preview.png)
 
 ---
 
@@ -129,6 +129,14 @@ _AI-powered service mesh incident debugger_ 🦝
 
 The API runs as serverless functions at `/api/*`. Sample incidents are read from the repo; **Import** is read-only on Vercel.
 
+### Run with Docker
+
+```bash
+docker compose up --build
+```
+
+Then open http://localhost:3000. Set `TETRATE_API_KEY` in `.env` for AI analysis.
+
 ---
 
 ## 🧪 Try it yourself
@@ -182,7 +190,7 @@ Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/depen
 - [x] PDF export for incident reports
 - [x] Incident correlation/grouping
 - [x] Hot-reload samples
-- [ ] Prometheus SLO recording rules for richer live SLO data
+- [x] Prometheus SLO recording rules (see [docs/prometheus-slo-recording-rules.md](./docs/prometheus-slo-recording-rules.md))
 
 ---
 

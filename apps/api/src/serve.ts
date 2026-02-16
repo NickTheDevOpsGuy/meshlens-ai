@@ -28,9 +28,10 @@ async function toRequest(req: IncomingMessage): Promise<Request> {
   }
   const chunks: Uint8Array[] = [];
   for await (const chunk of req) chunks.push(chunk);
-  const body = req.method !== "GET" && req.method !== "HEAD" && chunks.length > 0
-    ? Buffer.concat(chunks as Buffer[]).buffer
-    : undefined;
+  const body =
+    req.method !== "GET" && req.method !== "HEAD" && chunks.length > 0
+      ? Buffer.concat(chunks as Buffer[]).buffer
+      : undefined;
   return new Request(requestUrl, {
     method: req.method ?? "GET",
     headers,
