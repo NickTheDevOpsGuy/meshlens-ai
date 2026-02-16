@@ -26,7 +26,7 @@ export const sampleIncidents: IncidentBundle[] = [
     },
     summary: "Payment gateway experiencing 503 errors, causing order-service failures. Database connection pool exhaustion suspected.",
     rootCause: "PostgreSQL connection pool exhausted due to slow queries and connection leaks in payment-gateway.",
-    runbookUrl: "https://docs.example.com/runbooks/payment-cascade",
+    runbookUrl: "/runbooks/payment-cascade",
     aiAnalysis: {
       summary: "Cascade failure originating from payment-gateway's inability to acquire database connections.",
       rootCause: "Connection pool exhaustion in payment-gateway. Slow queries (8s+ p99) and a connection leak in the refund handler are holding connections open. Postgres max_connections (100) reached.",
@@ -61,7 +61,7 @@ export const sampleIncidents: IncidentBundle[] = [
       ],
     },
     summary: "ML inference service returning timeouts. Recommend-service error rate spiked to 15%.",
-    runbookUrl: "https://docs.example.com/runbooks/ml-timeouts",
+    runbookUrl: "/runbooks/ml-timeouts",
     traceId: "abc123def456",
     aiAnalysis: {
       summary: "Downstream ML inference service is timing out, causing recommend-service to fail.",

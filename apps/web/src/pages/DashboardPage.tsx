@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useIncidents } from "../hooks/useIncidents";
+import { correlateIncidents, groupByService } from "../utils/incidentUtils";
 import type { IncidentSeverity, IncidentStatus } from "@meshlens/shared";
 import type { IncidentBundle } from "@meshlens/shared";
 
@@ -22,58 +23,8 @@ type SeverityFilter = IncidentSeverity | "all";
 type StatusFilter = IncidentStatus | "all";
 type ViewMode = "list" | "by-service" | "correlated";
 
-const CORRELATION_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
-
-function correlateIncidents(incidents: IncidentBundle[]): IncidentBundle[][] {
-  const sorted = [...incidents].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  );
-  const groups: IncidentBundle[][] = [];
-  const used = new Set<string>();
-
-  for (const inc of sorted) {
-    if (used.has(inc.id)) continue;
-    const group: IncidentBundle[] = [inc];
-    used.add(inc.id);
-    let services = new Set(inc.affectedServices);
-    let groupTimes = [new Date(inc.createdAt).getTime()];
-    let changed = true;
-    while (changed) {
-      changed = false;
-      for (const other of sorted) {
-        if (used.has(other.id)) continue;
-        const t1 = new Date(other.createdAt).getTime();
-        const sharesService = other.affectedServices.some((s) => services.has(s));
-        const withinWindow = groupTimes.some((t) => Math.abs(t1 - t) <= CORRELATION_WINDOW_MS);
-        if (sharesService && withinWindow) {
-          group.push(other);
-          used.add(other.id);
-          other.affectedServices.forEach((s) => services.add(s));
-          groupTimes.push(t1);
-          changed = true;
-        }
-      }
-    }
-    groups.push(group);
-  }
-  return groups.filter((g) => g.length > 0);
-}
-
-function groupByService(incidents: IncidentBundle[]): Map<string, IncidentBundle[]> {
-  const map = new Map<string, IncidentBundle[]>();
-  for (const inc of incidents) {
-    const services = inc.affectedServices.length > 0 ? inc.affectedServices : ["(no services)"];
-    for (const svc of services) {
-      const list = map.get(svc) ?? [];
-      if (!list.some((i) => i.id === inc.id)) list.push(inc);
-      map.set(svc, list);
-    }
-  }
-  return map;
-}
-
 export default function DashboardPage() {
-  const { incidents, loading, liveLoading, error, hasTelemetry, hasAlertmanager } = useIncidents();
+  const { incidents, loading, liveLoading, error, hasTelemetry, hasAlertmanager, apiAvailable } = useIncidents();
   const [severity, setSeverity] = useState<SeverityFilter>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
@@ -113,6 +64,11 @@ export default function DashboardPage() {
         <p className="text-slate-400 mt-1">
           Active incidents and AI-powered analysis
         </p>
+        {!loading && !apiAvailable && (
+          <div className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm">
+            API unavailable — using sample data. Start the API (<code>pnpm dev</code>) for Import, AI analysis, and hot-reload.
+          </div>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3 mb-8">
@@ -200,12 +156,39 @@ export default function DashboardPage() {
           {viewMode === "correlated" && "Correlated Incident Groups"}
         </h2>
 
+        {incidents.length === 0 && !loading && (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12 text-center">
+            <p className="text-slate-400 mb-2">No incidents found.</p>
+            <p className="text-sm text-slate-500 mb-4">
+              Add JSON files to <code className="text-slate-400">samples/incidents/</code> or
+              configure Prometheus/Alertmanager in Settings for live data.
+            </p>
+            <Link
+              to="/import"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30"
+            >
+              Import incident JSON
+            </Link>
+          </div>
+        )}
+
+        {incidents.length > 0 && filtered.length === 0 && (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-8 text-center">
+            <p className="text-slate-400">No incidents match your filters.</p>
+            <p className="text-sm text-slate-500 mt-1">
+              Try adjusting severity, status, or search.
+            </p>
+          </div>
+        )}
+
         {viewMode === "list" &&
+          filtered.length > 0 &&
           filtered.map((incident) => (
             <IncidentCard key={incident.id} incident={incident} />
           ))}
 
         {viewMode === "by-service" &&
+          filtered.length > 0 &&
           Array.from(groupedByService.entries())
             .sort(([a], [b]) => a.localeCompare(b))
             .map(([svc, list]) => (
@@ -222,6 +205,7 @@ export default function DashboardPage() {
             ))}
 
         {viewMode === "correlated" &&
+          filtered.length > 0 &&
           correlatedGroups.map((group, idx) => (
             <div key={idx} className="space-y-2">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">

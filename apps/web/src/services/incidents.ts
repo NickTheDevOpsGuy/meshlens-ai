@@ -3,11 +3,15 @@ import { sampleIncidents } from "../data/sampleIncidents";
 
 const SAMPLES_BASE = "/samples/incidents";
 
-export async function loadSampleIncidents(): Promise<IncidentBundle[]> {
+export type LoadResult = { incidents: IncidentBundle[]; apiAvailable: boolean };
+
+export async function loadSampleIncidents(): Promise<LoadResult> {
   const fromFiles: IncidentBundle[] = [];
+  let apiAvailable = false;
 
   try {
     const apiRes = await fetch("/api/samples/incidents");
+    apiAvailable = apiRes.ok;
     if (apiRes.ok) {
       const data = (await apiRes.json()) as IncidentBundle[];
       if (Array.isArray(data)) {
@@ -42,5 +46,5 @@ export async function loadSampleIncidents(): Promise<IncidentBundle[]> {
     }
   }
 
-  return [...fromFiles, ...sampleIncidents];
+  return { incidents: [...fromFiles, ...sampleIncidents], apiAvailable };
 }

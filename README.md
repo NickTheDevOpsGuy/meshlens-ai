@@ -1,11 +1,10 @@
-# 🌌 Project Name
+# 🌌 Meshlens AI
 
-_Short tagline about what this project does_ 🦝
+_AI-powered service mesh incident debugger_ 🦝
 
 [![CI](https://github.com/NickTheDevOpsGuy/meshlens-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/NickTheDevOpsGuy/meshlens-ai/actions/workflows/ci.yml)
 ![Last Commit](https://img.shields.io/github/last-commit/NickTheDevOpsGuy/meshlens-ai)
 ![Built with React](https://img.shields.io/badge/Built%20with-React-61dafb?logo=react&logoColor=white)
-
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38bdf8?logo=tailwind-css&logoColor=white)
 ![License](https://img.shields.io/github/license/NickTheDevOpsGuy/meshlens-ai)
@@ -13,51 +12,72 @@ _Short tagline about what this project does_ 🦝
 
 ---
 
+## 🎯 Problem & Solution
+
+**Problem:** When service mesh incidents happen, engineers spend hours correlating metrics, traces, and alerts to find root cause. Distributed failures cascade across services, making it hard to see the full picture.
+
+**Solution:** Meshlens AI aggregates incidents from sample data, Prometheus, Jaeger, and Alertmanager—then uses **Tetrate Agent Router Service (TARS)** to analyze dependency graphs and suggest root causes. One dashboard, AI-powered analysis, PDF reports, and Slack/PagerDuty integration.
+
+---
+
+## 🔗 Live Demo
+
+**[→ Try Meshlens AI](https://meshlens-ai-api.vercel.app/)** · **[→ Docs](https://meshlens-ai-api.vercel.app/docs)**
+
+---
+
 ## 🖼 Preview
 
-### Main App Demo
-![App Demo GIF](./public/assets/preview.gif)
-
-### Feature Highlights
-![Feature Showcase](./public/assets/feature.gif)
-
-> 🎞️ *Previews are short animated GIFs recorded directly from the live app using screen capture — perfect for quick demos in READMEs.*
+> 📸 *Add screenshots: `./apps/web/public/preview.png` or record a short GIF of the Dashboard and Incident Detail flow.*
 
 ---
 
 ## 🚀 Features
 
-- **Dashboard** – Incident list with severity/status filters and search
-- **AI root cause analysis** – TARS-powered analysis with "Analyze with AI" button
+- **Dashboard** – Incident list with severity/status filters, search, and live telemetry
+- **AI root cause analysis** – TARS-powered "Analyze with AI" on any incident
+- **Incident correlation** – Group by service or by time (shared services, within 30 min)
 - **Service topology** – Visualize failing dependencies (sample + live from Prometheus/Jaeger)
 - **Incident timeline** – Overlapping incidents and duration
-- **SLO/SLI view** – Service level objectives vs actuals
-- **Alertmanager integration** – Firing alerts as incidents
-- **Export / share** – Export incident JSON, copy shareable link
+- **SLO/SLI view** – Service level objectives vs actuals (sample + live Prometheus)
+- **PDF export** – Export incident reports with AI analysis, root cause, recommendations
+- **Hot-reload samples** – API watches `samples/incidents/`; dashboard auto-refreshes on Import
+- **Alertmanager integration** – Firing alerts surfaced as incidents
+- **Export / share** – Export JSON, copy shareable link, notify Slack/PagerDuty
 - **Runbook links** – Associate runbooks with incidents
 - **Trace drill-down** – Link to Jaeger trace from incident
 - **Auto-refresh** – Configurable refresh for live telemetry
+- **Import** – Paste or upload JSON; saves to samples (local only)
 
 ---
 
-## 🔒 Privacy
+## 🏗 Architecture
 
-This app is designed for **local use only** — all processing happens in your browser.
-
----
-
-## 🗓️ Roadmap
-
-- [ ] Prometheus SLO recording rules for live SLO data
-- [ ] PDF export for incident reports
+```
+┌─────────────────┐     ┌──────────────────────────────────────────────────┐
+│   React + Vite  │     │                    Hono API                       │
+│   (port 5173)   │────►│  /api/samples  /api/ai/analyze  /api/prometheus   │
+│   Tailwind v4   │     │  /api/jaeger   /api/alertmanager  /api/notify      │
+└─────────────────┘     └──────────────────────────────────────────────────┘
+        │                                    │
+        │                                    ├──► TARS (AI analysis)
+        │                                    ├──► Prometheus (metrics/SLO)
+        └── localStorage (settings)           ├──► Jaeger (traces)
+                                             ├──► Alertmanager (alerts)
+                                             └──► Slack / PagerDuty
+```
 
 ---
 
 ## 🛠 Tech Stack
 
-- React + Vite
-- TypeScript
-- TailwindCSS v4
+| Layer      | Tech |
+|-----------|------|
+| Frontend  | React 19, Vite 6, Tailwind CSS v4, React Router 7 |
+| Backend   | Hono (Node + Vercel serverless) |
+| AI        | Tetrate Agent Router Service (TARS) |
+| Data      | TypeScript, pnpm monorepo, `@meshlens/shared` |
+| Deploy    | Vercel |
 
 ---
 
@@ -66,8 +86,8 @@ This app is designed for **local use only** — all processing happens in your b
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/NickTheDevOpsGuy/Project Name.git
-   cd Project Name
+   git clone https://github.com/NickTheDevOpsGuy/meshlens-ai.git
+   cd meshlens-ai
    ```
 
 2. **Configure environment (TARS)**
@@ -84,7 +104,7 @@ This app is designed for **local use only** — all processing happens in your b
 3. **Install dependencies**
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 4. **Run the development server**
@@ -93,76 +113,82 @@ This app is designed for **local use only** — all processing happens in your b
    pnpm dev
    ```
 
-   This starts both the web app (http://localhost:5173) and the API proxy
-   (http://localhost:3001). The API proxy forwards requests to Prometheus and
-   Jaeger—configure their URLs in Settings to enable live telemetry.
+   This starts the web app (http://localhost:5173) and API (http://localhost:3001). Configure Prometheus and Jaeger URLs in Settings for live telemetry.
+
 ---
 
 ## 🚢 Deploy to Vercel
 
 1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
 2. **Project Settings** → **General** → **Build & Development Settings**:
-   - **Root Directory**: `apps/web` (important—so `dist` output is correct for React/Vite preset)
-   - **Framework Preset**: `Vite` or `React` (both work now)
-   - **Include source files outside of the Root Directory**: enable (for monorepo workspace deps)
-   - Leave Build Command, Output Directory, Install Command as **auto-detected** (or Build: `pnpm run build`, Output: `dist`, Install: `pnpm install`)
-3. **Environment variables** (optional):
-   - `TETRATE_API_KEY` – for AI root cause analysis
-   - `TARS_API_BASE_URL`, `TARS_MODEL` – TARS config
+   - **Root Directory**: `apps/web`
+   - **Framework Preset**: `Vite` or `React`
+   - **Include source files outside of the Root Directory**: enable (for monorepo)
+   - Build/Output/Install: leave auto-detected or use `pnpm run build`, `dist`, `pnpm install`
+3. **Environment variables** (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`
 
-The API runs as serverless functions at `/api/*` (from `apps/web/api/`). Sample incidents are read from the repo; **Import** (save new incidents) is read-only on Vercel.
+The API runs as serverless functions at `/api/*`. Sample incidents are read from the repo; **Import** is read-only on Vercel.
+
+---
+
+## 🧪 Try it yourself
+
+1. Open the **Dashboard** — you’ll see sample incidents.
+2. Click an incident to open its **Incident Detail** page.
+3. Click **"Analyze with AI"** (requires `TETRATE_API_KEY` in `.env`).
+4. Use **Export PDF** to download a report.
+5. Toggle **View** to "Group by service" or "Correlated" on the Dashboard.
+6. Go to **Import** to paste or upload JSON (needs API running locally).
 
 ---
 
 ## 📁 Sample incident data
 
-Add your own incident scenarios by placing JSON files in `samples/incidents/` and listing them in `manifest.json`. Each file should follow the `IncidentBundle` schema (see `samples/incidents/README.md`).
+Add incident JSON files to `samples/incidents/` and list them in `manifest.json`. See `samples/incidents/README.md` for the schema.
 
 ## 🤖 AI root cause analysis
 
-Click **"Analyze with AI"** on any incident detail to get TARS-powered root cause analysis. Add `TETRATE_API_KEY` to your `.env` (at repo root) and restart the API server.
+Click **"Analyze with AI"** on any incident. Add `TETRATE_API_KEY` to `.env` and restart the API.
 
 ## 📡 Live telemetry
 
 When Prometheus or Jaeger URLs are configured in Settings:
 
 - **Dashboard** fetches live incidents (high error rates from Istio metrics)
-- **Service Map** shows a "Load live topology" link to render the service graph from Prometheus/Jaeger
-- The API proxy (port 3001) forwards requests to avoid CORS
+- **Service Map** shows "Load live topology" for the live graph
+- The API proxies requests to avoid CORS
 
-Prometheus must scrape `istio_requests_total` (Istio) or similar service mesh metrics. Jaeger's `/api/dependencies` endpoint provides the service graph.
+Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/dependencies` provides the service graph.
 
 ---
 
 ## 📂 Project Structure
 
-<details>
-<summary>📁 Click to expand file structure</summary>
-
-```plaintext
-.
-├── apps/
-│   ├── api/                # Proxy for Prometheus/Jaeger (port 3001)
-│   └── web/                # React + Vite + Tailwind app (port 5173)
-│       ├── src/
-│       │   ├── components/
-│       │   ├── pages/
-│       │   ├── data/
-│       │   └── services/   # Telemetry fetch & normalize
-│       └── ...
-├── packages/
-│   └── shared/             # Incident types, telemetry schemas
-├── .env.example
-├── package.json
-└── README.md
 ```
-</details>
+├── apps/
+│   ├── api/              # Hono API (port 3001, Vercel serverless)
+│   └── web/              # React + Vite app (port 5173)
+│       ├── api/          # Vercel serverless entry
+│       └── src/
+├── packages/shared/      # Incident types, schemas
+├── samples/incidents/    # JSON incident bundles
+└── vercel.json
+```
+
+---
+
+## 🗓️ Roadmap
+
+- [x] PDF export for incident reports
+- [x] Incident correlation/grouping
+- [x] Hot-reload samples
+- [ ] Prometheus SLO recording rules for richer live SLO data
 
 ---
 
 ## 🤝 Contributing
 
-- 🐛 Report bugs in [Issues](../../../../issues)
+- 🐛 Report bugs in [Issues](https://github.com/NickTheDevOpsGuy/meshlens-ai/issues)
 - 💡 Suggest features or improvements
 - 🔧 Open a Pull Request
 

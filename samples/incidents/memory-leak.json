@@ -19,5 +19,6 @@
   },
   "summary": "search-indexer pods OOM every ~45min. Search results degraded. Heap grows monotonically.",
   "rootCause": "Suspected unbounded buffer in document processing pipeline. Profiler not yet run.",
+  "runbookUrl": "/runbooks/memory-leak",
   "aiAnalysis": null
 }

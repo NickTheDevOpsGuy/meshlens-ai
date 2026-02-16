@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import { jsPDF } from "jspdf";
 import { useIncidents } from "../hooks/useIncidents";
 import { loadSettings } from "../hooks/useSettings";
 import type { IncidentSeverity, IncidentStatus, AIRootCauseAnalysis } from "@meshlens/shared";
@@ -11,6 +10,10 @@ const severityStyles: Record<IncidentSeverity, string> = {
   medium: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
   low: "bg-slate-500/20 text-slate-400 border-slate-500/30",
 };
+
+function runbookUrlIsInternal(url: string): boolean {
+  return url.startsWith("/") || url.startsWith(window.location.origin);
+}
 
 const statusStyles: Record<IncidentStatus, string> = {
   open: "bg-rose-500/10 text-rose-400",
@@ -41,6 +44,7 @@ export default function IncidentDetailPage() {
   const [aiAnalysis, setAiAnalysis] = useState<AIRootCauseAnalysis | undefined>(incident.aiAnalysis);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [exportingPdf, setExportingPdf] = useState(false);
 
   const handleAnalyze = async () => {
     setAnalyzing(true);
@@ -92,8 +96,11 @@ export default function IncidentDetailPage() {
     navigator.clipboard?.writeText(window.location.href);
   };
 
-  const handleExportPdf = () => {
-    const doc = new jsPDF();
+  const handleExportPdf = async () => {
+    setExportingPdf(true);
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
     const margin = 20;
     const pageW = doc.getPageWidth();
     const pageH = doc.getPageHeight();
@@ -138,6 +145,9 @@ export default function IncidentDetailPage() {
     }
 
     doc.save(`incident-${incident.id}.pdf`);
+    } finally {
+      setExportingPdf(false);
+    }
   };
 
   const handleNotify = async () => {
@@ -193,16 +203,24 @@ export default function IncidentDetailPage() {
         <h1 className="text-3xl font-bold text-slate-100">{incident.title}</h1>
         <p className="text-slate-400 mt-2">Affected: {incident.affectedServices.join(", ")}</p>
         <div className="mt-4 flex flex-wrap gap-3">
-          {incident.runbookUrl && (
-            <a
-              href={incident.runbookUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-cyan-400 hover:underline"
-            >
-              📋 View runbook →
-            </a>
-          )}
+          {incident.runbookUrl &&
+            (runbookUrlIsInternal(incident.runbookUrl) ? (
+              <Link
+                to={incident.runbookUrl}
+                className="text-sm text-cyan-400 hover:underline"
+              >
+                📋 View runbook →
+              </Link>
+            ) : (
+              <a
+                href={incident.runbookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-cyan-400 hover:underline"
+              >
+                📋 View runbook →
+              </a>
+            ))}
           {traceUrl && (
             <a
               href={traceUrl}
@@ -216,8 +234,12 @@ export default function IncidentDetailPage() {
           <button onClick={handleExport} className="text-sm text-slate-400 hover:text-cyan-400">
             Export JSON
           </button>
-          <button onClick={handleExportPdf} className="text-sm text-slate-400 hover:text-cyan-400">
-            Export PDF
+          <button
+            onClick={handleExportPdf}
+            disabled={exportingPdf}
+            className="text-sm text-slate-400 hover:text-cyan-400 disabled:opacity-50"
+          >
+            {exportingPdf ? "Exporting…" : "Export PDF"}
           </button>
           <button onClick={handleCopyLink} className="text-sm text-slate-400 hover:text-cyan-400">
             Copy share link

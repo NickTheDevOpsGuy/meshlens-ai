@@ -21,7 +21,7 @@
   },
   "summary": "Cross-region connectivity loss. EU cluster cannot reach Kafka in us-east. Orders in eu-west failing.",
   "rootCause": "BGP route flapping in transit provider caused ~2min partition between regions.",
-  "runbookUrl": "https://docs.example.com/runbooks/network-partition",
+  "runbookUrl": "/runbooks/network-partition",
   "aiAnalysis": {
     "summary": "Network partition isolated eu-west from shared Kafka cluster in us-east.",
     "rootCause": "Transit provider BGP route flap caused temporary loss of connectivity between eu-west-1 and us-east-1. Kafka is single-region (us-east); EU orders depend on it for event publishing.",

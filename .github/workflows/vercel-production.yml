@@ -13,7 +13,7 @@ jobs:
 
     environment:
       name: production
-      url: https://phuzzle.vercel.app/
+      url: https://meshlens-ai-api.vercel.app
 
     steps:
       - name: Checkout

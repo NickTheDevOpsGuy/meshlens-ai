@@ -51,9 +51,15 @@ export function useIncidents() {
       .catch(() => setAlertIncidents([]));
   }, [hasAlertmanager, settings.alertmanagerUrl]);
 
+  const [apiAvailable, setApiAvailable] = useState(false);
   const refetchSamples = useCallback(() => {
     setLoading(true);
-    loadSampleIncidents().then(setSampleIncidents).finally(() => setLoading(false));
+    loadSampleIncidents()
+      .then(({ incidents, apiAvailable: ok }) => {
+        setSampleIncidents(incidents);
+        setApiAvailable(ok);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -119,6 +125,7 @@ export function useIncidents() {
     error,
     hasTelemetry,
     hasAlertmanager,
+    apiAvailable,
     refetchSamples,
   };
 }

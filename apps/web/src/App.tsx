@@ -8,6 +8,8 @@ import SettingsPage from "./pages/SettingsPage";
 import TimelinePage from "./pages/TimelinePage";
 import SLOPage from "./pages/SLOPage";
 import ImportPage from "./pages/ImportPage";
+import RunbookPage from "./pages/RunbookPage";
+import DocsPage from "./pages/DocsPage";
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
         <Route path="/timeline" element={<TimelinePage />} />
         <Route path="/slo" element={<SLOPage />} />
         <Route path="/import" element={<ImportPage />} />
+        <Route path="/runbooks/:topic" element={<RunbookPage />} />
+        <Route path="/docs" element={<DocsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </Layout>

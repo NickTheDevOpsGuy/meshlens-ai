@@ -19,7 +19,7 @@
   },
   "summary": "Rollback of feature flag config triggered mass cache invalidation. Config service overwhelmed.",
   "rootCause": "Config rollback broadcast changed config to all clients simultaneously; each client invalidated local caches and re-fetched, creating thundering herd.",
-  "runbookUrl": "https://docs.example.com/runbooks/config-rollback",
+  "runbookUrl": "/runbooks/config-rollback",
   "aiAnalysis": {
     "summary": "Config rollback without staggered rollout caused cache stampede on config-service.",
     "rootCause": "Rollback pushed config change to all 200+ clients at once. Each client's cache TTL expired around the same time (deployed in same batch), causing synchronized re-fetch storm. Config-service CPU hit 100%, latency spiked to 2s.",
