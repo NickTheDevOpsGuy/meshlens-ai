@@ -12,7 +12,9 @@ const SAMPLES_DIR = path.resolve(__dirname, "../../../samples/incidents");
 let samplesVersion = 0;
 if (!isVercel && fs.existsSync(SAMPLES_DIR)) {
   try {
-    fs.watch(SAMPLES_DIR, { recursive: false }, () => { samplesVersion += 1; });
+    fs.watch(SAMPLES_DIR, { recursive: false }, () => {
+      samplesVersion += 1;
+    });
   } catch {
     /* ignore */
   }
@@ -42,11 +44,15 @@ function loadIncidentsFromFolder(): unknown[] {
     let files: string[] = [];
     const manifestPath = path.join(SAMPLES_DIR, "manifest.json");
     if (fs.existsSync(manifestPath)) {
-      const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as { incidents?: string[] };
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as {
+        incidents?: string[];
+      };
       files = manifest.incidents ?? [];
     }
     if (files.length === 0) {
-      files = fs.readdirSync(SAMPLES_DIR).filter((f) => f.endsWith(".json") && f !== "manifest.json");
+      files = fs
+        .readdirSync(SAMPLES_DIR)
+        .filter((f) => f.endsWith(".json") && f !== "manifest.json");
     }
     for (const file of files) {
       const filePath = path.join(SAMPLES_DIR, file);
@@ -72,15 +78,23 @@ app.get("/api/samples/version", (c) =>
 app.post("/api/samples/incidents", async (c) => {
   if (isVercel) {
     return c.json(
-      { error: "Import is read-only on Vercel. Run the API locally for import." },
+      {
+        error: "Import is read-only on Vercel. Run the API locally for import.",
+      },
       503
     );
   }
-  const body = (await c.req.json()) as { id?: string; title?: string; [key: string]: unknown };
+  const body = (await c.req.json()) as {
+    id?: string;
+    title?: string;
+    [key: string]: unknown;
+  };
   if (!body?.id || !body?.dependencyGraph) {
     return c.json({ error: "id and dependencyGraph required" }, 400);
   }
-  const safeName = `${String(body.id).replace(/[^a-z0-9-_]/gi, "-").toLowerCase()}.json`;
+  const safeName = `${String(body.id)
+    .replace(/[^a-z0-9-_]/gi, "-")
+    .toLowerCase()}.json`;
   const filePath = path.join(SAMPLES_DIR, safeName);
   try {
     fs.mkdirSync(SAMPLES_DIR, { recursive: true });
@@ -97,24 +111,37 @@ app.post("/api/samples/incidents", async (c) => {
     samplesVersion += 1;
     return c.json({ ok: true, file: safeName });
   } catch (err) {
-    return c.json({ error: err instanceof Error ? err.message : "Write failed" }, 500);
+    return c.json(
+      { error: err instanceof Error ? err.message : "Write failed" },
+      500
+    );
   }
 });
 
 app.post("/api/ai/analyze", async (c) => {
   const apiKey = process.env.TETRATE_API_KEY;
-  const baseUrl = process.env.TARS_API_BASE_URL || "https://api.router.tetrate.ai";
+  const baseUrl =
+    process.env.TARS_API_BASE_URL || "https://api.router.tetrate.ai";
   const model = process.env.TARS_MODEL || "gpt-4o-mini";
 
   if (!apiKey) {
-    return c.json({ error: "TETRATE_API_KEY not configured. Add it to .env and restart the API." }, 503);
+    return c.json(
+      {
+        error:
+          "TETRATE_API_KEY not configured. Add it to .env and restart the API.",
+      },
+      503
+    );
   }
 
   const body = await c.req.json<{
     title: string;
     summary?: string;
     affectedServices: string[];
-    dependencyGraph: { nodes: { name: string }[]; edges: { source: string; target: string; errorRate?: number }[] };
+    dependencyGraph: {
+      nodes: { name: string }[];
+      edges: { source: string; target: string; errorRate?: number }[];
+    };
   }>();
 
   const prompt = `You are a service mesh incident analyst. Analyze this incident and provide root cause analysis.
@@ -135,20 +162,25 @@ Respond with a JSON object (no markdown) containing:
 }`;
 
   try {
-    const res = await fetch(`${baseUrl.replace(/\/$/, "")}/v1/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.3,
-      }),
-    });
+    const res = await fetch(
+      `${baseUrl.replace(/\/$/, "")}/v1/chat/completions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.3,
+        }),
+      }
+    );
 
-    const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
     const content = data.choices?.[0]?.message?.content;
     if (!content) {
       return c.json({ error: "No response from AI" }, 502);
@@ -175,7 +207,11 @@ Respond with a JSON object (no markdown) containing:
 });
 
 app.post("/api/prometheus/query", async (c) => {
-  const body = await c.req.json<{ baseUrl: string; query: string; time?: string }>();
+  const body = await c.req.json<{
+    baseUrl: string;
+    query: string;
+    time?: string;
+  }>();
   const { baseUrl, query, time } = body;
   if (!baseUrl || !query) {
     return c.json({ error: "baseUrl and query required" }, 400);
@@ -189,7 +225,9 @@ app.post("/api/prometheus/query", async (c) => {
     return c.json(data);
   } catch (err) {
     return c.json(
-      { error: err instanceof Error ? err.message : "Prometheus request failed" },
+      {
+        error: err instanceof Error ? err.message : "Prometheus request failed",
+      },
       502
     );
   }
@@ -218,7 +256,9 @@ app.post("/api/prometheus/query_range", async (c) => {
     return c.json(data);
   } catch (err) {
     return c.json(
-      { error: err instanceof Error ? err.message : "Prometheus request failed" },
+      {
+        error: err instanceof Error ? err.message : "Prometheus request failed",
+      },
       502
     );
   }
@@ -272,7 +312,10 @@ app.get("/api/alertmanager/alerts", async (c) => {
     return c.json(data);
   } catch (err) {
     return c.json(
-      { error: err instanceof Error ? err.message : "Alertmanager request failed" },
+      {
+        error:
+          err instanceof Error ? err.message : "Alertmanager request failed",
+      },
       502
     );
   }
@@ -280,7 +323,13 @@ app.get("/api/alertmanager/alerts", async (c) => {
 
 app.post("/api/notify", async (c) => {
   const body = (await c.req.json()) as {
-    incident: { id: string; title: string; severity: string; affectedServices: string[]; summary?: string };
+    incident: {
+      id: string;
+      title: string;
+      severity: string;
+      affectedServices: string[];
+      summary?: string;
+    };
     slackWebhookUrl?: string;
     pagerdutyIntegrationKey?: string;
   };
@@ -297,9 +346,32 @@ app.post("/api/notify", async (c) => {
         body: JSON.stringify({
           text: `🚨 *${incident.title}*`,
           blocks: [
-            { type: "header", text: { type: "plain_text", text: `Incident: ${incident.title}`, emoji: true } },
-            { type: "section", fields: [{ type: "mrkdwn", text: `*Severity:* ${incident.severity}` }, { type: "mrkdwn", text: `*Services:* ${(incident.affectedServices || []).join(", ")}` }] },
-            ...(incident.summary ? [{ type: "section", text: { type: "mrkdwn", text: incident.summary } }] : []),
+            {
+              type: "header",
+              text: {
+                type: "plain_text",
+                text: `Incident: ${incident.title}`,
+                emoji: true,
+              },
+            },
+            {
+              type: "section",
+              fields: [
+                { type: "mrkdwn", text: `*Severity:* ${incident.severity}` },
+                {
+                  type: "mrkdwn",
+                  text: `*Services:* ${(incident.affectedServices || []).join(", ")}`,
+                },
+              ],
+            },
+            ...(incident.summary
+              ? [
+                  {
+                    type: "section",
+                    text: { type: "mrkdwn", text: incident.summary },
+                  },
+                ]
+              : []),
           ],
         }),
       });
@@ -322,12 +394,16 @@ app.post("/api/notify", async (c) => {
             summary: incident.title,
             severity: incident.severity === "critical" ? "critical" : "error",
             source: "meshlens-ai",
-            custom_details: { affected_services: incident.affectedServices, summary: incident.summary },
+            custom_details: {
+              affected_services: incident.affectedServices,
+              summary: incident.summary,
+            },
           },
         }),
       });
       const data = (await res.json()) as { status?: string };
-      results.pagerduty = data.status === "success" ? "ok" : JSON.stringify(data);
+      results.pagerduty =
+        data.status === "success" ? "ok" : JSON.stringify(data);
     } catch (err) {
       results.pagerduty = err instanceof Error ? err.message : "failed";
     }
@@ -337,23 +413,53 @@ app.post("/api/notify", async (c) => {
 });
 
 app.post("/api/prometheus/slo", async (c) => {
-  const body = (await c.req.json()) as { baseUrl: string; queries?: { name: string; query: string; target?: number; unit?: string; higherBetter?: boolean }[] };
+  const body = (await c.req.json()) as {
+    baseUrl: string;
+    queries?: {
+      name: string;
+      query: string;
+      target?: number;
+      unit?: string;
+      higherBetter?: boolean;
+    }[];
+  };
   const { baseUrl, queries } = body;
   if (!baseUrl) return c.json({ error: "baseUrl required" }, 400);
 
   const defaultQueries = [
-    { name: "Error rate", query: "sum(rate(istio_requests_total{response_code=~\"5..\"}[5m]))/sum(rate(istio_requests_total[5m]))*100", target: 1, unit: "%", higherBetter: false },
-    { name: "Request rate", query: "sum(rate(istio_requests_total[5m]))", target: 100, unit: "/s", higherBetter: true },
+    {
+      name: "Error rate",
+      query:
+        'sum(rate(istio_requests_total{response_code=~"5.."}[5m]))/sum(rate(istio_requests_total[5m]))*100',
+      target: 1,
+      unit: "%",
+      higherBetter: false,
+    },
+    {
+      name: "Request rate",
+      query: "sum(rate(istio_requests_total[5m]))",
+      target: 100,
+      unit: "/s",
+      higherBetter: true,
+    },
   ];
   const toRun = queries?.length ? queries : defaultQueries;
-  const results: { name: string; value: number; target?: number; unit: string; status: string }[] = [];
+  const results: {
+    name: string;
+    value: number;
+    target?: number;
+    unit: string;
+    status: string;
+  }[] = [];
 
   for (const q of toRun) {
     try {
       const url = new URL("/api/v1/query", baseUrl.replace(/\/$/, ""));
       url.searchParams.set("query", q.query);
       const res = await fetch(url.toString());
-      const data = (await res.json()) as { data?: { result?: { value?: [number, string] }[] } };
+      const data = (await res.json()) as {
+        data?: { result?: { value?: [number, string] }[] };
+      };
       const val = parseFloat(data.data?.result?.[0]?.value?.[1] ?? "0") || 0;
       const target = q.target ?? 0;
       const higherBetter = q.higherBetter ?? false;
@@ -362,9 +468,21 @@ app.post("/api/prometheus/slo", async (c) => {
         const ok = higherBetter ? val >= target : val <= target;
         status = ok ? "healthy" : val > target * 1.5 ? "breach" : "warning";
       }
-      results.push({ name: q.name, value: val, target, unit: q.unit ?? "", status });
+      results.push({
+        name: q.name,
+        value: val,
+        target,
+        unit: q.unit ?? "",
+        status,
+      });
     } catch {
-      results.push({ name: q.name, value: 0, target: q.target, unit: q.unit ?? "", status: "unknown" });
+      results.push({
+        name: q.name,
+        value: 0,
+        target: q.target,
+        unit: q.unit ?? "",
+        status: "unknown",
+      });
     }
   }
   return c.json(results);

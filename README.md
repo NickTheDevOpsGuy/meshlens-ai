@@ -28,7 +28,7 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🖼 Preview
 
-> 📸 *Add screenshots: `./apps/web/public/preview.png` or record a short GIF of the Dashboard and Incident Detail flow.*
+> 📸 _Add screenshots: `./apps/web/public/preview.png` or record a short GIF of the Dashboard and Incident Detail flow._
 
 ---
 
@@ -71,13 +71,13 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🛠 Tech Stack
 
-| Layer      | Tech |
-|-----------|------|
-| Frontend  | React 19, Vite 6, Tailwind CSS v4, React Router 7 |
-| Backend   | Hono (Node + Vercel serverless) |
-| AI        | Tetrate Agent Router Service (TARS) |
-| Data      | TypeScript, pnpm monorepo, `@meshlens/shared` |
-| Deploy    | Vercel |
+| Layer    | Tech                                              |
+| -------- | ------------------------------------------------- |
+| Frontend | React 19, Vite 6, Tailwind CSS v4, React Router 7 |
+| Backend  | Hono (Node + Vercel serverless)                   |
+| AI       | Tetrate Agent Router Service (TARS)               |
+| Data     | TypeScript, pnpm monorepo, `@meshlens/shared`     |
+| Deploy   | Vercel                                            |
 
 ---
 

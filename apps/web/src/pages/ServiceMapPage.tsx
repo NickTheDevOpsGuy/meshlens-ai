@@ -7,7 +7,9 @@ import type { ServiceDependencyGraph } from "@meshlens/shared";
 
 export default function ServiceMapPage() {
   const [searchParams] = useSearchParams();
-  const [liveGraph, setLiveGraph] = useState<ServiceDependencyGraph | null>(null);
+  const [liveGraph, setLiveGraph] = useState<ServiceDependencyGraph | null>(
+    null
+  );
   const [liveLoading, setLiveLoading] = useState(false);
   const [liveError, setLiveError] = useState<string | null>(null);
 
@@ -20,25 +22,33 @@ export default function ServiceMapPage() {
   const incident = incidentId
     ? incidents.find((i) => i.id === incidentId)
     : incidents[0];
-  const sampleGraph = incident?.dependencyGraph ?? (incidents[0]?.dependencyGraph ?? { nodes: [], edges: [] });
+  const sampleGraph = incident?.dependencyGraph ??
+    incidents[0]?.dependencyGraph ?? { nodes: [], edges: [] };
 
   useEffect(() => {
     if (!hasTelemetry || !useLive) return;
     setLiveLoading(true);
     setLiveError(null);
-    fetchLiveTopology(settings.prometheusUrl || undefined, settings.traceUrl || undefined)
+    fetchLiveTopology(
+      settings.prometheusUrl || undefined,
+      settings.traceUrl || undefined
+    )
       .then(setLiveGraph)
-      .catch((e) => setLiveError(e instanceof Error ? e.message : "Failed to fetch"))
+      .catch((e) =>
+        setLiveError(e instanceof Error ? e.message : "Failed to fetch")
+      )
       .finally(() => setLiveLoading(false));
   }, [hasTelemetry, useLive, settings.prometheusUrl, settings.traceUrl]);
 
-  const graph = (useLive && liveGraph) ? liveGraph : sampleGraph;
+  const graph = useLive && liveGraph ? liveGraph : sampleGraph;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-100">Service topology</h1>
+          <h1 className="text-3xl font-bold text-slate-100">
+            Service topology
+          </h1>
           <p className="text-slate-400 mt-1">
             Failing service dependencies and request flows
           </p>
@@ -47,11 +57,15 @@ export default function ServiceMapPage() {
           {incident && !useLive && (
             <span className="text-sm text-slate-400">
               Viewing topology for{" "}
-              <span className="text-cyan-400 font-medium">{incident.title}</span>
+              <span className="text-cyan-400 font-medium">
+                {incident.title}
+              </span>
             </span>
           )}
           {useLive && (
-            <span className="text-sm text-emerald-400">● Live from Prometheus/Jaeger</span>
+            <span className="text-sm text-emerald-400">
+              ● Live from Prometheus/Jaeger
+            </span>
           )}
           {hasTelemetry && (
             <Link
@@ -66,7 +80,9 @@ export default function ServiceMapPage() {
 
       <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/50 min-h-[500px]">
         {liveLoading && (
-          <div className="mb-4 text-sm text-slate-400">Fetching live topology...</div>
+          <div className="mb-4 text-sm text-slate-400">
+            Fetching live topology...
+          </div>
         )}
         {liveError && (
           <div className="mb-4 text-sm text-rose-400">{liveError}</div>
@@ -89,7 +105,9 @@ export default function ServiceMapPage() {
                     <span className="w-2 h-2 rounded-full bg-cyan-500" />
                     <span className="font-mono">{n.name}</span>
                     {n.namespace && (
-                      <span className="text-slate-500 text-xs">{n.namespace}</span>
+                      <span className="text-slate-500 text-xs">
+                        {n.namespace}
+                      </span>
                     )}
                   </li>
                 ))}
@@ -104,7 +122,9 @@ export default function ServiceMapPage() {
                   <li key={i} className="text-sm">
                     <span className="font-mono text-cyan-400">{e.source}</span>
                     <span className="text-slate-600 mx-1">→</span>
-                    <span className="font-mono text-indigo-400">{e.target}</span>
+                    <span className="font-mono text-indigo-400">
+                      {e.target}
+                    </span>
                     {e.errorRate !== undefined && e.errorRate > 0.1 && (
                       <span className="ml-2 text-rose-400 text-xs">
                         {(e.errorRate * 100).toFixed(1)}% err
@@ -119,7 +139,7 @@ export default function ServiceMapPage() {
       </div>
 
       <p className="mt-4 text-sm text-slate-500">
-        This is a simplified topology view using sample incident data.         To test
+        This is a simplified topology view using sample incident data. To test
         different topologies, visit{" "}
         <Link to="/dashboard" className="text-cyan-500 hover:underline">
           Dashboard
@@ -136,7 +156,10 @@ export default function ServiceMapPage() {
 function TopologyVisualization({
   graph,
 }: {
-  graph: { nodes: { name: string }[]; edges: { source: string; target: string; errorRate?: number }[] };
+  graph: {
+    nodes: { name: string }[];
+    edges: { source: string; target: string; errorRate?: number }[];
+  };
 }) {
   const nodePositions = layoutNodes(graph.nodes, graph.edges);
   const width = 640;
@@ -239,7 +262,7 @@ function partitionLayers(
 
   const layers: string[][] = [];
   const assigned = new Set<string>();
-  let remaining = new Set(nodes.map((n) => n.name));
+  const remaining = new Set(nodes.map((n) => n.name));
 
   while (remaining.size > 0) {
     const layer = [...remaining].filter((n) => {

@@ -11,7 +11,12 @@ async function prometheusQuery(
   baseUrl: string,
   query: string,
   time?: string
-): Promise<{ status: string; data?: { result: Array<{ metric: Record<string, string>; value: [number, string] }> } }> {
+): Promise<{
+  status: string;
+  data?: {
+    result: Array<{ metric: Record<string, string>; value: [number, string] }>;
+  };
+}> {
   const res = await fetch(`${API_BASE}/api/prometheus/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -26,7 +31,9 @@ async function jaegerDependencies(
   baseUrl: string,
   endTs: number,
   lookback: number
-): Promise<{ data?: Array<{ parent: string; child: string; callCount: number }> }> {
+): Promise<{
+  data?: Array<{ parent: string; child: string; callCount: number }>;
+}> {
   const url = `${API_BASE}/api/jaeger/dependencies?baseUrl=${encodeURIComponent(baseUrl)}&endTs=${endTs}&lookback=${lookback}`;
   const res = await fetch(url);
   const data = await res.json();
@@ -89,7 +96,8 @@ export async function fetchPrometheusTopology(
     if (errorRes.data?.result) addResults(errorRes.data.result, true);
   } catch (err) {
     throw new Error(
-      `Prometheus query failed. Ensure Prometheus is reachable and scraping Istio/Envoy metrics. ${err instanceof Error ? err.message : ""}`
+      `Prometheus query failed. Ensure Prometheus is reachable and scraping Istio/Envoy metrics. ${err instanceof Error ? err.message : ""}`,
+      { cause: err }
     );
   }
 
@@ -109,7 +117,9 @@ export async function fetchPrometheusTopology(
   return { nodes: Array.from(nodes.values()), edges };
 }
 
-export async function fetchJaegerTopology(jaegerUrl: string): Promise<ServiceDependencyGraph> {
+export async function fetchJaegerTopology(
+  jaegerUrl: string
+): Promise<ServiceDependencyGraph> {
   const endTs = Date.now() * 1000;
   const lookback = 3600000;
 

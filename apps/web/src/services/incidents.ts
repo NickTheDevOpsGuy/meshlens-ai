@@ -28,7 +28,9 @@ export async function loadSampleIncidents(): Promise<LoadResult> {
     try {
       const manifestRes = await fetch(`${SAMPLES_BASE}/manifest.json`);
       if (manifestRes.ok) {
-        const { incidents: files } = (await manifestRes.json()) as { incidents: string[] };
+        const { incidents: files } = (await manifestRes.json()) as {
+          incidents: string[];
+        };
         for (const file of files || []) {
           try {
             const res = await fetch(`${SAMPLES_BASE}/${file}`);

@@ -31,12 +31,17 @@ describe("loadSampleIncidents", () => {
 
     expect(apiAvailable).toBe(true);
     expect(incidents).toContainEqual(
-      expect.objectContaining({ id: "test-1", dependencyGraph: expect.any(Object) })
+      expect.objectContaining({
+        id: "test-1",
+        dependencyGraph: expect.any(Object),
+      })
     );
   });
 
   it("returns apiAvailable false when API fails", async () => {
-    (fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("Network error"));
+    (fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("Network error")
+    );
 
     const { incidents, apiAvailable } = await loadSampleIncidents();
 

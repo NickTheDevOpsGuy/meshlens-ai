@@ -85,7 +85,9 @@ export default function RunbookPage() {
           </ol>
         ) : (
           <p className="text-slate-500">
-            No runbook template for &quot;{topic}&quot;. Add templates in <code className="text-slate-400">RunbookPage.tsx</code> or link to your external runbook docs.
+            No runbook template for &quot;{topic}&quot;. Add templates in{" "}
+            <code className="text-slate-400">RunbookPage.tsx</code> or link to
+            your external runbook docs.
           </p>
         )}
       </div>

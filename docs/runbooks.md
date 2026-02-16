@@ -8,13 +8,13 @@ Each incident can have a `runbookUrl` that points to a runbook. In the Incident 
 
 Meshlens AI includes internal runbook templates at `/runbooks/:topic`:
 
-| Topic | Description |
-|-------|-------------|
-| `payment-cascade` | Payment service cascade failure |
-| `ml-timeouts` | ML inference timeouts |
-| `config-rollback` | Config rollback procedures |
+| Topic               | Description                      |
+| ------------------- | -------------------------------- |
+| `payment-cascade`   | Payment service cascade failure  |
+| `ml-timeouts`       | ML inference timeouts            |
+| `config-rollback`   | Config rollback procedures       |
 | `network-partition` | Network partition / connectivity |
-| `memory-leak` | Memory leak investigation |
+| `memory-leak`       | Memory leak investigation        |
 
 Use internal URLs in your incident JSON:
 

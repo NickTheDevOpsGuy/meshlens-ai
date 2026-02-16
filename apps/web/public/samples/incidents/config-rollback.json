@@ -8,13 +8,37 @@
   "affectedServices": ["config-service", "api-gateway", "product-catalog"],
   "dependencyGraph": {
     "nodes": [
-      { "name": "config-service", "namespace": "platform", "workload": "deployment" },
-      { "name": "api-gateway", "namespace": "gateway", "workload": "deployment" },
-      { "name": "product-catalog", "namespace": "catalog", "workload": "deployment" }
+      {
+        "name": "config-service",
+        "namespace": "platform",
+        "workload": "deployment"
+      },
+      {
+        "name": "api-gateway",
+        "namespace": "gateway",
+        "workload": "deployment"
+      },
+      {
+        "name": "product-catalog",
+        "namespace": "catalog",
+        "workload": "deployment"
+      }
     ],
     "edges": [
-      { "source": "api-gateway", "target": "config-service", "requestRate": 12000, "errorRate": 0.35, "p99LatencyMs": 450 },
-      { "source": "product-catalog", "target": "config-service", "requestRate": 8000, "errorRate": 0.41, "p99LatencyMs": 520 }
+      {
+        "source": "api-gateway",
+        "target": "config-service",
+        "requestRate": 12000,
+        "errorRate": 0.35,
+        "p99LatencyMs": 450
+      },
+      {
+        "source": "product-catalog",
+        "target": "config-service",
+        "requestRate": 8000,
+        "errorRate": 0.41,
+        "p99LatencyMs": 520
+      }
     ]
   },
   "summary": "Rollback of feature flag config triggered mass cache invalidation. Config service overwhelmed.",
@@ -23,7 +47,10 @@
   "aiAnalysis": {
     "summary": "Config rollback without staggered rollout caused cache stampede on config-service.",
     "rootCause": "Rollback pushed config change to all 200+ clients at once. Each client's cache TTL expired around the same time (deployed in same batch), causing synchronized re-fetch storm. Config-service CPU hit 100%, latency spiked to 2s.",
-    "affectedPath": ["api-gateway → config-service", "product-catalog → config-service"],
+    "affectedPath": [
+      "api-gateway → config-service",
+      "product-catalog → config-service"
+    ],
     "recommendations": [
       "Implement staggered config rollout (canary by region or pod subset)",
       "Add jitter to cache TTL to spread re-fetch load",
