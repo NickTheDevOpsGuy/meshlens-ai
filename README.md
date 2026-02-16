@@ -103,9 +103,9 @@ This app is designed for **local use only** — all processing happens in your b
 1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
 2. **Project Settings** → **General** → **Build & Development Settings**:
    - **Root Directory**: leave **blank** (repo root).
-   - **Framework Preset**: `Vite` (or `Other`).
+   - **Framework Preset**: set to **Other** (not Vite—Vite forces output `dist` at wrong path).
    - **Build Command**: `pnpm --filter @meshlens/web build`
-   - **Output Directory**: `apps/web/dist` ← required (Vercel may default to `build`, which fails).
+   - **Output Directory**: `apps/web/dist`
    - **Install Command**: `pnpm install`
 3. **Environment variables** (optional):
    - `TETRATE_API_KEY` – for AI root cause analysis

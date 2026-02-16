@@ -2,7 +2,7 @@
   "buildCommand": "pnpm --filter @meshlens/web build",
   "outputDirectory": "apps/web/dist",
   "installCommand": "pnpm install",
-  "framework": "vite",
+  "framework": null,
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
