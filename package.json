@@ -2,11 +2,14 @@
   "name": "meshlens-ai",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @meshlens/web dev",
+    "dev": "concurrently \"pnpm run dev:api\" \"pnpm run dev:web\"",
+    "dev:web": "pnpm --filter @meshlens/web dev",
+    "dev:api": "pnpm --filter @meshlens/api dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "typescript": "^5.7.2"
   },
   "packageManager": "pnpm@9.14.2",

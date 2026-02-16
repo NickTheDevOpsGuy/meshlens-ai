@@ -59,6 +59,24 @@ export interface IncidentBundle {
   summary?: string;
   rootCause?: string;
   aiAnalysis?: AIRootCauseAnalysis;
+  runbookUrl?: string;
+  traceId?: string;
+}
+
+export interface FiringAlert {
+  fingerprint: string;
+  labels: Record<string, string>;
+  annotations?: Record<string, string>;
+  startsAt: string;
+  endsAt?: string;
+}
+
+export interface SLOState {
+  name: string;
+  target: number;
+  current: number;
+  unit: string;
+  status: "healthy" | "warning" | "breach";
 }
 
 export interface AIRootCauseAnalysis {

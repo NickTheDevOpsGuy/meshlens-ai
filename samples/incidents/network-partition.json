@@ -1,0 +1,38 @@
+{
+  "id": "sample-network-partition",
+  "title": "Network partition between us-east and eu-west",
+  "severity": "critical",
+  "status": "investigating",
+  "createdAt": "2025-02-13T11:20:00Z",
+  "updatedAt": "2025-02-13T11:45:00Z",
+  "affectedServices": ["orders-eu", "orders-us", "inventory-sync", "kafka"],
+  "dependencyGraph": {
+    "nodes": [
+      { "name": "orders-eu", "namespace": "orders", "workload": "deployment" },
+      { "name": "orders-us", "namespace": "orders", "workload": "deployment" },
+      { "name": "inventory-sync", "namespace": "data", "workload": "cronjob" },
+      { "name": "kafka", "namespace": "messaging", "workload": "statefulset" }
+    ],
+    "edges": [
+      { "source": "orders-eu", "target": "kafka", "requestRate": 500, "errorRate": 0.95, "p99LatencyMs": 30000 },
+      { "source": "orders-us", "target": "kafka", "requestRate": 800, "errorRate": 0.02, "p99LatencyMs": 50 },
+      { "source": "inventory-sync", "target": "orders-eu", "requestRate": 10, "errorRate": 0.8, "p99LatencyMs": 5000 }
+    ]
+  },
+  "summary": "Cross-region connectivity loss. EU cluster cannot reach Kafka in us-east. Orders in eu-west failing.",
+  "rootCause": "BGP route flapping in transit provider caused ~2min partition between regions.",
+  "runbookUrl": "https://docs.example.com/runbooks/network-partition",
+  "aiAnalysis": {
+    "summary": "Network partition isolated eu-west from shared Kafka cluster in us-east.",
+    "rootCause": "Transit provider BGP route flap caused temporary loss of connectivity between eu-west-1 and us-east-1. Kafka is single-region (us-east); EU orders depend on it for event publishing.",
+    "affectedPath": ["orders-eu → kafka", "inventory-sync → orders-eu"],
+    "recommendations": [
+      "Deploy regional Kafka clusters with replication across regions",
+      "Add circuit breakers for cross-region calls with fail-fast behavior",
+      "Consider event sourcing with regional write buffers",
+      "Add network partition drill to runbooks"
+    ],
+    "confidence": 0.92,
+    "analyzedAt": "2025-02-13T11:35:00Z"
+  }
+}

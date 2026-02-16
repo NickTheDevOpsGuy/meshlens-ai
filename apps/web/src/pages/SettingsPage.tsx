@@ -1,15 +1,5 @@
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "meshlens-settings";
-
-type Settings = {
-  tetrateApiKey: string;
-  tarsApiBaseUrl: string;
-  tarsModel: string;
-  prometheusUrl: string;
-  traceUrl: string;
-  grafanaUrl: string;
-};
+import { loadSettings, saveSettings, type Settings } from "../hooks/useSettings";
 
 const defaults: Settings = {
   tetrateApiKey: "",
@@ -18,23 +8,11 @@ const defaults: Settings = {
   prometheusUrl: "",
   traceUrl: "",
   grafanaUrl: "",
+  alertmanagerUrl: "",
+  refreshIntervalSec: 0,
+  slackWebhookUrl: "",
+  pagerdutyIntegrationKey: "",
 };
-
-function loadSettings(): Settings {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return { ...defaults, ...JSON.parse(stored) };
-    }
-  } catch {
-    /* ignore */
-  }
-  return { ...defaults };
-}
-
-function saveSettings(s: Settings) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-}
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Settings>(defaults);
@@ -74,8 +52,7 @@ export default function SettingsPage() {
             >
               router.tetrate.ai
             </a>
-            . Only TARS is required—Prometheus and Jaeger are optional for
-            future live telemetry.
+            .
           </p>
           <div className="space-y-4">
             <div>
@@ -133,9 +110,8 @@ export default function SettingsPage() {
             </span>
           </h2>
           <p className="text-sm text-slate-400 mb-4">
-            Prometheus, Jaeger, and Grafana are <strong>not required</strong> to
-            run Meshlens. The app works with sample data. Add these only when you
-            want live incident discovery from your service mesh.
+            Prometheus, Jaeger, Grafana, and Alertmanager are optional. Add when
+            you want live incident discovery.
           </p>
           <div className="space-y-4">
             <div>
@@ -168,6 +144,20 @@ export default function SettingsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-400 mb-2">
+                Alertmanager URL
+              </label>
+              <input
+                type="url"
+                placeholder="http://alertmanager:9093"
+                value={settings.alertmanagerUrl}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, alertmanagerUrl: e.target.value }))
+                }
+                className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-2">
                 Grafana URL (optional)
               </label>
               <input
@@ -179,6 +169,55 @@ export default function SettingsPage() {
                 }
                 className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-2">
+                Slack webhook URL
+              </label>
+              <input
+                type="url"
+                placeholder="https://hooks.slack.com/services/..."
+                value={settings.slackWebhookUrl ?? ""}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, slackWebhookUrl: e.target.value }))
+                }
+                className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-2">
+                PagerDuty integration key
+              </label>
+              <input
+                type="password"
+                placeholder="Events API v2 integration key"
+                value={settings.pagerdutyIntegrationKey ?? ""}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, pagerdutyIntegrationKey: e.target.value }))
+                }
+                className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-2">
+                Live refresh interval (seconds)
+              </label>
+              <select
+                value={settings.refreshIntervalSec}
+                onChange={(e) =>
+                  setSettings((s) => ({
+                    ...s,
+                    refreshIntervalSec: Number(e.target.value),
+                  }))
+                }
+                className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50"
+              >
+                <option value={0}>Off</option>
+                <option value={30}>30 seconds</option>
+                <option value={60}>1 minute</option>
+                <option value={120}>2 minutes</option>
+                <option value={300}>5 minutes</option>
+              </select>
             </div>
           </div>
         </section>

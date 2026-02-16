@@ -8,4 +8,6 @@ export type {
   MetricSample,
   IncidentBundle,
   AIRootCauseAnalysis,
+  FiringAlert,
+  SLOState,
 } from "./incidentBundle";

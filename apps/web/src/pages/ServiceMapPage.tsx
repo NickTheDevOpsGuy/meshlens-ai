@@ -1,13 +1,38 @@
+import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { sampleIncidents } from "../data/sampleIncidents";
+import { useIncidents } from "../hooks/useIncidents";
+import { fetchLiveTopology } from "../services/telemetry";
+import { loadSettings } from "../hooks/useSettings";
+import type { ServiceDependencyGraph } from "@meshlens/shared";
 
 export default function ServiceMapPage() {
   const [searchParams] = useSearchParams();
+  const [liveGraph, setLiveGraph] = useState<ServiceDependencyGraph | null>(null);
+  const [liveLoading, setLiveLoading] = useState(false);
+  const [liveError, setLiveError] = useState<string | null>(null);
+
+  const settings = loadSettings();
+  const hasTelemetry = !!(settings.prometheusUrl || settings.traceUrl);
+  const { incidents } = useIncidents();
+
   const incidentId = searchParams.get("incident");
+  const useLive = searchParams.get("live") === "1";
   const incident = incidentId
-    ? sampleIncidents.find((i) => i.id === incidentId)
-    : sampleIncidents[0];
-  const graph = incident?.dependencyGraph ?? sampleIncidents[0].dependencyGraph;
+    ? incidents.find((i) => i.id === incidentId)
+    : incidents[0];
+  const sampleGraph = incident?.dependencyGraph ?? (incidents[0]?.dependencyGraph ?? { nodes: [], edges: [] });
+
+  useEffect(() => {
+    if (!hasTelemetry || !useLive) return;
+    setLiveLoading(true);
+    setLiveError(null);
+    fetchLiveTopology(settings.prometheusUrl || undefined, settings.traceUrl || undefined)
+      .then(setLiveGraph)
+      .catch((e) => setLiveError(e instanceof Error ? e.message : "Failed to fetch"))
+      .finally(() => setLiveLoading(false));
+  }, [hasTelemetry, useLive, settings.prometheusUrl, settings.traceUrl]);
+
+  const graph = (useLive && liveGraph) ? liveGraph : sampleGraph;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -18,15 +43,34 @@ export default function ServiceMapPage() {
             Failing service dependencies and request flows
           </p>
         </div>
-        {incident && (
-          <div className="text-sm text-slate-400">
-            Viewing topology for{" "}
-            <span className="text-cyan-400 font-medium">{incident.title}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          {incident && !useLive && (
+            <span className="text-sm text-slate-400">
+              Viewing topology for{" "}
+              <span className="text-cyan-400 font-medium">{incident.title}</span>
+            </span>
+          )}
+          {useLive && (
+            <span className="text-sm text-emerald-400">● Live from Prometheus/Jaeger</span>
+          )}
+          {hasTelemetry && (
+            <Link
+              to={useLive ? "/topology" : "/topology?live=1"}
+              className="text-sm text-cyan-400 hover:underline"
+            >
+              {useLive ? "Switch to sample" : "Load live topology"}
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/50 min-h-[500px]">
+        {liveLoading && (
+          <div className="mb-4 text-sm text-slate-400">Fetching live topology...</div>
+        )}
+        {liveError && (
+          <div className="mb-4 text-sm text-rose-400">{liveError}</div>
+        )}
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1">
             <TopologyVisualization graph={graph} />

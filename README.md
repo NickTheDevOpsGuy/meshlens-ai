@@ -27,9 +27,16 @@ _Short tagline about what this project does_ 🦝
 
 ## 🚀 Features
 
-- List your main features here
-- Another feature or capability
-- Something unique to highlight
+- **Dashboard** – Incident list with severity/status filters and search
+- **AI root cause analysis** – TARS-powered analysis with "Analyze with AI" button
+- **Service topology** – Visualize failing dependencies (sample + live from Prometheus/Jaeger)
+- **Incident timeline** – Overlapping incidents and duration
+- **SLO/SLI view** – Service level objectives vs actuals
+- **Alertmanager integration** – Firing alerts as incidents
+- **Export / share** – Export incident JSON, copy shareable link
+- **Runbook links** – Associate runbooks with incidents
+- **Trace drill-down** – Link to Jaeger trace from incident
+- **Auto-refresh** – Configurable refresh for live telemetry
 
 ---
 
@@ -41,8 +48,8 @@ This app is designed for **local use only** — all processing happens in your b
 
 ## 🗓️ Roadmap
 
-- [ ] Upcoming feature or improvement
-- [ ] Future idea or enhancement
+- [ ] Prometheus SLO recording rules for live SLO data
+- [ ] PDF export for incident reports
 
 ---
 
@@ -83,8 +90,32 @@ This app is designed for **local use only** — all processing happens in your b
 4. **Run the development server**
 
    ```bash
-   npm run dev
+   pnpm dev
    ```
+
+   This starts both the web app (http://localhost:5173) and the API proxy
+   (http://localhost:3001). The API proxy forwards requests to Prometheus and
+   Jaeger—configure their URLs in Settings to enable live telemetry.
+---
+
+## 📁 Sample incident data
+
+Add your own incident scenarios by placing JSON files in `apps/web/public/samples/incidents/` and listing them in `manifest.json`. Each file should follow the `IncidentBundle` schema (see `samples/incidents/README.md`).
+
+## 🤖 AI root cause analysis
+
+Click **"Analyze with AI"** on any incident detail to get TARS-powered root cause analysis. Add `TETRATE_API_KEY` to your `.env` (at repo root) and restart the API server.
+
+## 📡 Live telemetry
+
+When Prometheus or Jaeger URLs are configured in Settings:
+
+- **Dashboard** fetches live incidents (high error rates from Istio metrics)
+- **Service Map** shows a "Load live topology" link to render the service graph from Prometheus/Jaeger
+- The API proxy (port 3001) forwards requests to avoid CORS
+
+Prometheus must scrape `istio_requests_total` (Istio) or similar service mesh metrics. Jaeger's `/api/dependencies` endpoint provides the service graph.
+
 ---
 
 ## 📂 Project Structure
@@ -95,11 +126,13 @@ This app is designed for **local use only** — all processing happens in your b
 ```plaintext
 .
 ├── apps/
-│   └── web/                 # React + Vite + Tailwind app
+│   ├── api/                # Proxy for Prometheus/Jaeger (port 3001)
+│   └── web/                # React + Vite + Tailwind app (port 5173)
 │       ├── src/
-│       │   ├── components/  # Layout, shared UI
-│       │   ├── pages/       # Home, Dashboard, Incident Detail, Service Map, Settings
-│       │   └── data/       # Sample incidents
+│       │   ├── components/
+│       │   ├── pages/
+│       │   ├── data/
+│       │   └── services/   # Telemetry fetch & normalize
 │       └── ...
 ├── packages/
 │   └── shared/             # Incident types, telemetry schemas

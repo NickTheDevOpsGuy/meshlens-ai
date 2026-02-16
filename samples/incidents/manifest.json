@@ -1,0 +1,7 @@
+{
+  "incidents": [
+    "network-partition.json",
+    "config-rollback.json",
+    "memory-leak.json"
+  ]
+}

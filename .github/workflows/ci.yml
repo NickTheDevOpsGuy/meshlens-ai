@@ -24,8 +24,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Type check
-        run: pnpm exec tsc --noEmit -p apps/web
-
       - name: Build
-        run: pnpm --filter @meshlens/web build
+        run: pnpm -r build

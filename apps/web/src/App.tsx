@@ -5,6 +5,9 @@ import DashboardPage from "./pages/DashboardPage";
 import IncidentDetailPage from "./pages/IncidentDetailPage";
 import ServiceMapPage from "./pages/ServiceMapPage";
 import SettingsPage from "./pages/SettingsPage";
+import TimelinePage from "./pages/TimelinePage";
+import SLOPage from "./pages/SLOPage";
+import ImportPage from "./pages/ImportPage";
 
 export default function App() {
   return (
@@ -14,6 +17,9 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/incidents/:id" element={<IncidentDetailPage />} />
         <Route path="/topology" element={<ServiceMapPage />} />
+        <Route path="/timeline" element={<TimelinePage />} />
+        <Route path="/slo" element={<SLOPage />} />
+        <Route path="/import" element={<ImportPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </Layout>
