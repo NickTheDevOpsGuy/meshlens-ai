@@ -98,9 +98,26 @@ This app is designed for **local use only** — all processing happens in your b
    Jaeger—configure their URLs in Settings to enable live telemetry.
 ---
 
+## 🚢 Deploy to Vercel
+
+1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
+2. **Project Settings** → **General** → **Build & Development Settings**:
+   - **Root Directory**: leave **blank** (repo root).
+   - **Framework Preset**: `Vite` (or `Other`).
+   - **Build Command**: `pnpm --filter @meshlens/web build`
+   - **Output Directory**: `apps/web/dist` ← required (Vercel may default to `build`, which fails).
+   - **Install Command**: `pnpm install`
+3. **Environment variables** (optional):
+   - `TETRATE_API_KEY` – for AI root cause analysis
+   - `TARS_API_BASE_URL`, `TARS_MODEL` – TARS config
+
+The API runs as serverless functions on the same domain (`/api/*`). Sample incidents are read from the repo; **Import** (save new incidents) is read-only on Vercel—run the API locally to add incidents via the UI.
+
+---
+
 ## 📁 Sample incident data
 
-Add your own incident scenarios by placing JSON files in `apps/web/public/samples/incidents/` and listing them in `manifest.json`. Each file should follow the `IncidentBundle` schema (see `samples/incidents/README.md`).
+Add your own incident scenarios by placing JSON files in `samples/incidents/` and listing them in `manifest.json`. Each file should follow the `IncidentBundle` schema (see `samples/incidents/README.md`).
 
 ## 🤖 AI root cause analysis
 
