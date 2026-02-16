@@ -102,16 +102,15 @@ This app is designed for **local use only** — all processing happens in your b
 
 1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
 2. **Project Settings** → **General** → **Build & Development Settings**:
-   - **Root Directory**: leave **blank** (repo root).
-   - **Framework Preset**: set to **Other** (not Vite—Vite forces output `dist` at wrong path).
-   - **Build Command**: `pnpm --filter @meshlens/web build`
-   - **Output Directory**: `apps/web/dist`
-   - **Install Command**: `pnpm install`
+   - **Root Directory**: `apps/web` (important—so `dist` output is correct for React/Vite preset)
+   - **Framework Preset**: `Vite` or `React` (both work now)
+   - **Include source files outside of the Root Directory**: enable (for monorepo workspace deps)
+   - Leave Build Command, Output Directory, Install Command as **auto-detected** (or Build: `pnpm run build`, Output: `dist`, Install: `pnpm install`)
 3. **Environment variables** (optional):
    - `TETRATE_API_KEY` – for AI root cause analysis
    - `TARS_API_BASE_URL`, `TARS_MODEL` – TARS config
 
-The API runs as serverless functions on the same domain (`/api/*`). Sample incidents are read from the repo; **Import** (save new incidents) is read-only on Vercel—run the API locally to add incidents via the UI.
+The API runs as serverless functions at `/api/*` (from `apps/web/api/`). Sample incidents are read from the repo; **Import** (save new incidents) is read-only on Vercel.
 
 ---
 

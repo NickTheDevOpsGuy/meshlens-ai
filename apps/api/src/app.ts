@@ -6,9 +6,8 @@ import { cors } from "hono/cors";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isVercel = !!process.env.VERCEL;
-const SAMPLES_DIR = isVercel
-  ? path.join(process.cwd(), "samples", "incidents")
-  : path.resolve(__dirname, "../../../samples/incidents");
+// Use path relative to this file so it works in both Node and Vercel (any cwd)
+const SAMPLES_DIR = path.resolve(__dirname, "../../../samples/incidents");
 
 let samplesVersion = 0;
 if (!isVercel && fs.existsSync(SAMPLES_DIR)) {
