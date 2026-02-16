@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { loadSettings, saveSettings, type Settings } from "../hooks/useSettings";
+import {
+  loadSettings,
+  saveSettings,
+  type Settings,
+} from "../hooks/useSettings";
 
 const defaults: Settings = {
   tetrateApiKey: "",
@@ -96,7 +100,9 @@ export default function SettingsPage() {
               >
                 <option value="gpt-4o-mini">gpt-4o-mini (fast)</option>
                 <option value="gpt-4o">gpt-4o</option>
-                <option value="claude-4-sonnet-20250514">Claude Sonnet 4</option>
+                <option value="claude-4-sonnet-20250514">
+                  Claude Sonnet 4
+                </option>
               </select>
             </div>
           </div>
@@ -151,7 +157,10 @@ export default function SettingsPage() {
                 placeholder="http://alertmanager:9093"
                 value={settings.alertmanagerUrl}
                 onChange={(e) =>
-                  setSettings((s) => ({ ...s, alertmanagerUrl: e.target.value }))
+                  setSettings((s) => ({
+                    ...s,
+                    alertmanagerUrl: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
               />
@@ -179,7 +188,10 @@ export default function SettingsPage() {
                 placeholder="https://hooks.slack.com/services/..."
                 value={settings.slackWebhookUrl ?? ""}
                 onChange={(e) =>
-                  setSettings((s) => ({ ...s, slackWebhookUrl: e.target.value }))
+                  setSettings((s) => ({
+                    ...s,
+                    slackWebhookUrl: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
               />
@@ -193,7 +205,10 @@ export default function SettingsPage() {
                 placeholder="Events API v2 integration key"
                 value={settings.pagerdutyIntegrationKey ?? ""}
                 onChange={(e) =>
-                  setSettings((s) => ({ ...s, pagerdutyIntegrationKey: e.target.value }))
+                  setSettings((s) => ({
+                    ...s,
+                    pagerdutyIntegrationKey: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50"
               />

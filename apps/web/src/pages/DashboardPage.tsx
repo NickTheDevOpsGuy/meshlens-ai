@@ -24,7 +24,15 @@ type StatusFilter = IncidentStatus | "all";
 type ViewMode = "list" | "by-service" | "correlated";
 
 export default function DashboardPage() {
-  const { incidents, loading, liveLoading, error, hasTelemetry, hasAlertmanager, apiAvailable } = useIncidents();
+  const {
+    incidents,
+    loading,
+    liveLoading,
+    error,
+    hasTelemetry,
+    hasAlertmanager,
+    apiAvailable,
+  } = useIncidents();
   const [severity, setSeverity] = useState<SeverityFilter>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
@@ -37,56 +45,50 @@ export default function DashboardPage() {
       if (search.trim()) {
         const q = search.toLowerCase();
         const matchTitle = i.title.toLowerCase().includes(q);
-        const matchServices = i.affectedServices.some((s) => s.toLowerCase().includes(q));
+        const matchServices = i.affectedServices.some((s) =>
+          s.toLowerCase().includes(q)
+        );
         if (!matchTitle && !matchServices) return false;
       }
       return true;
     });
   }, [incidents, severity, status, search]);
 
-  const groupedByService = useMemo(
-    () => groupByService(filtered),
-    [filtered]
-  );
+  const groupedByService = useMemo(() => groupByService(filtered), [filtered]);
 
   const correlatedGroups = useMemo(
     () => correlateIncidents(filtered),
     [filtered]
   );
 
-  const openCount = incidents.filter((i) => i.status !== "resolved" && i.status !== "dismissed").length;
-  const criticalCount = incidents.filter((i) => i.severity === "critical").length;
+  const openCount = incidents.filter(
+    (i) => i.status !== "resolved" && i.status !== "dismissed"
+  ).length;
+  const criticalCount = incidents.filter(
+    (i) => i.severity === "critical"
+  ).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-100">Incident Dashboard</h1>
+        <h1 className="text-3xl font-bold text-slate-100">
+          Incident Dashboard
+        </h1>
         <p className="text-slate-400 mt-1">
           Active incidents and AI-powered analysis
         </p>
         {!loading && !apiAvailable && (
           <div className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm">
-            API unavailable — using sample data. Start the API (<code>pnpm dev</code>) for Import, AI analysis, and hot-reload.
+            API unavailable — using sample data. Start the API (
+            <code>pnpm dev</code>) for Import, AI analysis, and hot-reload.
           </div>
         )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3 mb-8">
-        <StatCard
-          label="Open incidents"
-          value={openCount}
-          color="cyan"
-        />
-        <StatCard
-          label="Critical"
-          value={criticalCount}
-          color="rose"
-        />
-        <StatCard
-          label="Total today"
-          value={incidents.length}
-          color="indigo"
-        />
+        <StatCard label="Open incidents" value={openCount} color="cyan" />
+        <StatCard label="Critical" value={criticalCount} color="rose" />
+        <StatCard label="Total today" value={incidents.length} color="indigo" />
       </div>
 
       <div className="mb-4 flex flex-wrap items-center gap-4">
@@ -142,11 +144,15 @@ export default function DashboardPage() {
         {(hasTelemetry || hasAlertmanager) && (
           <>
             <span className="text-sm text-emerald-400">● Live</span>
-            {liveLoading && <span className="text-sm text-slate-500">Fetching...</span>}
+            {liveLoading && (
+              <span className="text-sm text-slate-500">Fetching...</span>
+            )}
             {error && <span className="text-sm text-rose-400">{error}</span>}
           </>
         )}
-        {loading && <span className="text-sm text-slate-500">Loading samples...</span>}
+        {loading && (
+          <span className="text-sm text-slate-500">Loading samples...</span>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -160,7 +166,8 @@ export default function DashboardPage() {
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-12 text-center">
             <p className="text-slate-400 mb-2">No incidents found.</p>
             <p className="text-sm text-slate-500 mb-4">
-              Add JSON files to <code className="text-slate-400">samples/incidents/</code> or
+              Add JSON files to{" "}
+              <code className="text-slate-400">samples/incidents/</code> or
               configure Prometheus/Alertmanager in Settings for live data.
             </p>
             <Link
@@ -209,7 +216,8 @@ export default function DashboardPage() {
           correlatedGroups.map((group, idx) => (
             <div key={idx} className="space-y-2">
               <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">
-                Correlated group · {group.length} incident{group.length !== 1 ? "s" : ""} · shared services, within 30 min
+                Correlated group · {group.length} incident
+                {group.length !== 1 ? "s" : ""} · shared services, within 30 min
               </h3>
               <div className="space-y-2 pl-4 border-l-2 border-cyan-500/30">
                 {group.map((incident) => (
@@ -279,7 +287,9 @@ function StatCard({
     indigo: "text-indigo-400 border-indigo-500/30",
   };
   return (
-    <div className={`p-5 rounded-xl border bg-slate-900/50 ${colorClasses[color]}`}>
+    <div
+      className={`p-5 rounded-xl border bg-slate-900/50 ${colorClasses[color]}`}
+    >
       <p className="text-sm text-slate-400">{label}</p>
       <p className="text-3xl font-bold mt-1">{value}</p>
     </div>

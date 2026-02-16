@@ -42,16 +42,26 @@ if [ -n "$EMPTY_FILES" ]; then
 fi
 echo "✅ [SUCCESS]: No empty files detected."
 
-# 2. LINT (optional; enable when eslint is configured in all workspaces)
-echo "🧪 [STEP 2]: Linting..."
+# 2. PRETTIER (format check)
+echo "🎨 [STEP 2]: Checking code style (Prettier)..."
+if ! pnpm exec prettier --check . 2>/dev/null; then
+  echo "🛑 [SYSTEM FAULT]: Prettier check failed. Run 'pnpm run format' to fix."
+  exit 1
+fi
+echo "✅ [SUCCESS]: Code style OK."
+
+# 3. LINT (ESLint)
+echo "🧪 [STEP 3]: Linting..."
 if pnpm run lint 2>/dev/null; then
   echo "✅ [SUCCESS]: Lint passed."
 else
-  echo "⚠️  [SKIP]: Lint not configured or failed. Configure eslint to enable."
+  echo "🛑 [SYSTEM FAULT]: Lint failed. Run 'pnpm run lint:fix' to auto-fix what you can."
+  exit 1
 fi
+echo "✅ [SUCCESS]: Lint passed."
 
-# 3. TYPESCRIPT (Static Verification)
-echo "🛠️  [STEP 3]: Verifying Type Integrity (tsc)..."
+# 4. TYPESCRIPT (Static Verification)
+echo "🛠️  [STEP 4]: Verifying Type Integrity (tsc)..."
 if ! pnpm exec tsc --noEmit -p apps/web -p apps/api -p packages/shared 2>/dev/null; then
   echo "🛑 [SYSTEM FAULT]: TypeScript found type errors. Go fix those red squiggles!"
   exit 1
@@ -59,7 +69,7 @@ fi
 echo "✅ [SUCCESS]: Types are verified."
 
 # 4. UNIT TESTS (Vitest)
-echo "🧪 [STEP 4]: Running unit tests (Vitest)..."
+echo "🧪 [STEP 5]: Running unit tests (Vitest)..."
 if ! pnpm run test; then
   echo "🛑 [SYSTEM FAULT]: Unit tests failed. Fix the red dots!"
   exit 1

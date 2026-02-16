@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { sampleSLOs } from "../data/sampleSLOs";
 import { loadSettings } from "../hooks/useSettings";
 
-type SLOEntry = { name: string; value: number; target?: number; unit: string; status: string };
+type SLOEntry = {
+  name: string;
+  value: number;
+  target?: number;
+  unit: string;
+  status: string;
+};
 
 export default function SLOPage() {
   const [liveSLOs, setLiveSLOs] = useState<SLOEntry[] | null>(null);
@@ -20,16 +26,30 @@ export default function SLOPage() {
       .catch(() => setLiveSLOs(null));
   }, [settings.prometheusUrl]);
 
-  const slos = liveSLOs ?? sampleSLOs.map((s) => ({ name: s.name, value: s.current, target: s.target, unit: s.unit, status: s.status }));
+  const slos =
+    liveSLOs ??
+    sampleSLOs.map((s) => ({
+      name: s.name,
+      value: s.current,
+      target: s.target,
+      unit: s.unit,
+      status: s.status,
+    }));
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-100">SLO / SLI overview</h1>
+        <h1 className="text-3xl font-bold text-slate-100">
+          SLO / SLI overview
+        </h1>
         <p className="text-slate-400 mt-1">
           Service level objectives vs actuals
         </p>
-        {liveSLOs && <span className="text-sm text-emerald-400">● Live from Prometheus</span>}
+        {liveSLOs && (
+          <span className="text-sm text-emerald-400">
+            ● Live from Prometheus
+          </span>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -37,9 +57,14 @@ export default function SLOPage() {
           const val = slo.value;
           const target = slo.target ?? 0;
           const isHigherBetter = slo.unit === "%" || slo.status === "healthy";
-          const barPct = target > 0 ? (isHigherBetter ? Math.min((val / target) * 100, 100) : Math.max(100 - (val / target) * 100, 0)) : 50;
+          const barPct =
+            target > 0
+              ? isHigherBetter
+                ? Math.min((val / target) * 100, 100)
+                : Math.max(100 - (val / target) * 100, 0)
+              : 50;
           const statusColor =
-            (slo.status === "breach" || slo.status === "unknown")
+            slo.status === "breach" || slo.status === "unknown"
               ? "border-rose-500/50 bg-rose-500/10"
               : slo.status === "warning"
                 ? "border-amber-500/50 bg-amber-500/10"
@@ -59,7 +84,7 @@ export default function SLOPage() {
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full ${
-                    (slo.status === "breach" || slo.status === "unknown")
+                    slo.status === "breach" || slo.status === "unknown"
                       ? "bg-rose-500"
                       : slo.status === "warning"
                         ? "bg-amber-500"

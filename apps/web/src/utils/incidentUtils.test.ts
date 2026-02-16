@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { correlateIncidents, groupByService, CORRELATION_WINDOW_MS } from "./incidentUtils";
+import { correlateIncidents, groupByService } from "./incidentUtils";
 import type { IncidentBundle } from "@meshlens/shared";
 
 const baseGraph = { nodes: [{ name: "svc" }], edges: [] };

@@ -9,12 +9,32 @@
   "dependencyGraph": {
     "nodes": [
       { "name": "search-api", "namespace": "search", "workload": "deployment" },
-      { "name": "search-indexer", "namespace": "search", "workload": "deployment" },
-      { "name": "elasticsearch", "namespace": "data", "workload": "statefulset" }
+      {
+        "name": "search-indexer",
+        "namespace": "search",
+        "workload": "deployment"
+      },
+      {
+        "name": "elasticsearch",
+        "namespace": "data",
+        "workload": "statefulset"
+      }
     ],
     "edges": [
-      { "source": "search-api", "target": "search-indexer", "requestRate": 450, "errorRate": 0.18, "p99LatencyMs": 12000 },
-      { "source": "search-indexer", "target": "elasticsearch", "requestRate": 2000, "errorRate": 0.05, "p99LatencyMs": 800 }
+      {
+        "source": "search-api",
+        "target": "search-indexer",
+        "requestRate": 450,
+        "errorRate": 0.18,
+        "p99LatencyMs": 12000
+      },
+      {
+        "source": "search-indexer",
+        "target": "elasticsearch",
+        "requestRate": 2000,
+        "errorRate": 0.05,
+        "p99LatencyMs": 800
+      }
     ]
   },
   "summary": "search-indexer pods OOM every ~45min. Search results degraded. Heap grows monotonically.",

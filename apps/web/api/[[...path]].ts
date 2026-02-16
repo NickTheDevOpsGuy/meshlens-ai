@@ -3,7 +3,10 @@ import { app } from "../../../apps/api/src/app";
 
 async function toWebRequest(req: IncomingMessage): Promise<Request> {
   const protocol = (req.headers["x-forwarded-proto"] as string) ?? "https";
-  const host = (req.headers["x-forwarded-host"] as string) ?? req.headers.host ?? "localhost";
+  const host =
+    (req.headers["x-forwarded-host"] as string) ??
+    req.headers.host ??
+    "localhost";
   const url = `${protocol}://${host}${req.url ?? "/"}`;
   const headers = new Headers();
   for (const [k, v] of Object.entries(req.headers)) {
@@ -18,7 +21,10 @@ async function toWebRequest(req: IncomingMessage): Promise<Request> {
   return new Request(url, { method: req.method ?? "GET", headers, body });
 }
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
+export default async function handler(
+  req: IncomingMessage,
+  res: ServerResponse
+) {
   try {
     const request = await toWebRequest(req);
     const response = await app.fetch(request);
@@ -29,6 +35,10 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   } catch (err) {
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ error: err instanceof Error ? err.message : "Internal error" }));
+    res.end(
+      JSON.stringify({
+        error: err instanceof Error ? err.message : "Internal error",
+      })
+    );
   }
 }

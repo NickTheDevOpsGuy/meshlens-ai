@@ -32,15 +32,21 @@ export function useIncidents() {
   const settings = loadSettings();
   const hasTelemetry = !!(settings.prometheusUrl || settings.traceUrl);
   const hasAlertmanager = !!settings.alertmanagerUrl;
-  const refreshInterval = settings.refreshIntervalSec > 0 ? settings.refreshIntervalSec * 1000 : 0;
+  const refreshInterval =
+    settings.refreshIntervalSec > 0 ? settings.refreshIntervalSec * 1000 : 0;
 
   const fetchLive = useCallback(() => {
     if (!hasTelemetry) return;
     setLiveLoading(true);
     setError(null);
-    fetchLiveIncidents(settings.prometheusUrl || undefined, settings.traceUrl || undefined)
+    fetchLiveIncidents(
+      settings.prometheusUrl || undefined,
+      settings.traceUrl || undefined
+    )
       .then(setLiveIncidents)
-      .catch((e) => setError(e instanceof Error ? e.message : "Telemetry fetch failed"))
+      .catch((e) =>
+        setError(e instanceof Error ? e.message : "Telemetry fetch failed")
+      )
       .finally(() => setLiveLoading(false));
   }, [hasTelemetry, settings.prometheusUrl, settings.traceUrl]);
 
@@ -69,7 +75,8 @@ export function useIncidents() {
   useEffect(() => {
     const onSamplesChanged = () => refetchSamples();
     window.addEventListener("meshlens-samples-changed", onSamplesChanged);
-    return () => window.removeEventListener("meshlens-samples-changed", onSamplesChanged);
+    return () =>
+      window.removeEventListener("meshlens-samples-changed", onSamplesChanged);
   }, [refetchSamples]);
 
   useEffect(() => {
@@ -80,8 +87,10 @@ export function useIncidents() {
         if (res.ok) {
           const { version } = (await res.json()) as { version?: number };
           if (typeof version === "number") {
-            if (first) { lastSamplesVersionRef.current = version; first = false; }
-            else if (version !== lastSamplesVersionRef.current) {
+            if (first) {
+              lastSamplesVersionRef.current = version;
+              first = false;
+            } else if (version !== lastSamplesVersionRef.current) {
               lastSamplesVersionRef.current = version;
               refetchSamples();
             }
@@ -113,7 +122,11 @@ export function useIncidents() {
     return () => clearInterval(id);
   }, [refreshInterval, fetchLive, fetchAlerts]);
 
-  const allIncidents = [...alertIncidents, ...liveIncidents, ...sampleIncidents];
+  const allIncidents = [
+    ...alertIncidents,
+    ...liveIncidents,
+    ...sampleIncidents,
+  ];
 
   return {
     incidents: allIncidents,

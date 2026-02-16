@@ -4,7 +4,11 @@ import ReactMarkdown from "react-markdown";
 
 const DOCS = [
   { id: "overview", label: "Overview", file: "overview.md" },
-  { id: "getting-started", label: "Getting Started", file: "getting-started.md" },
+  {
+    id: "getting-started",
+    label: "Getting Started",
+    file: "getting-started.md",
+  },
   { id: "configuration", label: "Configuration", file: "configuration.md" },
   { id: "incidents", label: "Incidents & Import", file: "incidents.md" },
   { id: "runbooks", label: "Runbooks", file: "runbooks.md" },
@@ -77,7 +81,11 @@ export default function DocsPage() {
                       <a
                         href={href}
                         target={href?.startsWith("http") ? "_blank" : undefined}
-                        rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                        rel={
+                          href?.startsWith("http")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
                         className="text-cyan-400 hover:underline"
                       >
                         {children}

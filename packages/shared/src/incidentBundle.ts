@@ -4,7 +4,11 @@
 
 export type IncidentSeverity = "critical" | "high" | "medium" | "low";
 
-export type IncidentStatus = "open" | "investigating" | "resolved" | "dismissed";
+export type IncidentStatus =
+  | "open"
+  | "investigating"
+  | "resolved"
+  | "dismissed";
 
 export interface ServiceNode {
   name: string;

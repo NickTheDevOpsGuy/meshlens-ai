@@ -17,7 +17,9 @@ Add JSON files here to extend Meshlens with your own incident scenarios. Each fi
   "affectedServices": ["service-a", "service-b"],
   "dependencyGraph": {
     "nodes": [{ "name": "service-a", "namespace": "default" }],
-    "edges": [{ "source": "service-a", "target": "service-b", "errorRate": 0.5 }]
+    "edges": [
+      { "source": "service-a", "target": "service-b", "errorRate": 0.5 }
+    ]
   }
 }
 ```

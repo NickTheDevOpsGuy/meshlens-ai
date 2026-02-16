@@ -31,7 +31,9 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-[50vh] flex flex-col items-center justify-center px-4">
           <div className="max-w-md w-full rounded-xl border border-rose-500/30 bg-rose-500/5 p-8 text-center">
-            <h1 className="text-xl font-semibold text-rose-400 mb-2">Something went wrong</h1>
+            <h1 className="text-xl font-semibold text-rose-400 mb-2">
+              Something went wrong
+            </h1>
             <p className="text-slate-400 text-sm mb-4 font-mono break-all">
               {this.state.error.message}
             </p>

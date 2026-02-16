@@ -6,15 +6,18 @@
     "dev:web": "pnpm --filter @meshlens/web dev",
     "dev:api": "pnpm --filter @meshlens/api dev",
     "build": "pnpm -r build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm --filter @meshlens/web run lint:fix",
-    "test": "pnpm --filter @meshlens/web test",
+    "test": "pnpm -r test",
     "precheck": "bash scripts/precheck.sh",
     "prepare": "husky"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
     "husky": "^9.1.7",
+    "prettier": "^3.8.1",
     "typescript": "^5.7.2"
   },
   "packageManager": "pnpm@9.14.2",

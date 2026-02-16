@@ -1,0 +1,12 @@
+services:
+  meshlens:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - TETRATE_API_KEY=${TETRATE_API_KEY:-}
+    volumes:
+      # Mount samples for hot-reload of incident data (optional)
+      - ./samples:/app/samples:ro

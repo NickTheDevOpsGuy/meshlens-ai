@@ -3,14 +3,19 @@ import { Link } from "react-router-dom";
 
 export default function ImportPage() {
   const [json, setJson] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
+    "idle"
+  );
   const [message, setMessage] = useState("");
 
   const handleImport = async () => {
     setStatus("loading");
     setMessage("");
     try {
-      const parsed = JSON.parse(json) as { id?: string; dependencyGraph?: unknown };
+      const parsed = JSON.parse(json) as {
+        id?: string;
+        dependencyGraph?: unknown;
+      };
       if (!parsed.id || !parsed.dependencyGraph) {
         throw new Error("JSON must have id and dependencyGraph");
       }
@@ -50,14 +55,20 @@ export default function ImportPage() {
       >
         ← Back to dashboard
       </Link>
-      <h1 className="text-3xl font-bold text-slate-100 mb-2">Import incident</h1>
+      <h1 className="text-3xl font-bold text-slate-100 mb-2">
+        Import incident
+      </h1>
       <p className="text-slate-400 mb-6">
-        Paste JSON or upload a file. Saves to <code className="text-slate-500">samples/incidents/</code>. Requires the API to be running.
+        Paste JSON or upload a file. Saves to{" "}
+        <code className="text-slate-500">samples/incidents/</code>. Requires the
+        API to be running.
       </p>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-400 mb-2">Incident JSON</label>
+          <label className="block text-sm font-medium text-slate-400 mb-2">
+            Incident JSON
+          </label>
           <textarea
             value={json}
             onChange={(e) => setJson(e.target.value)}
@@ -88,7 +99,9 @@ export default function ImportPage() {
           </button>
         </div>
         {message && (
-          <p className={`text-sm ${status === "ok" ? "text-emerald-400" : "text-rose-400"}`}>
+          <p
+            className={`text-sm ${status === "ok" ? "text-emerald-400" : "text-rose-400"}`}
+          >
             {message}
           </p>
         )}

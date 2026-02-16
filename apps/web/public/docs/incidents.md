@@ -44,7 +44,6 @@ See `packages/shared/src/incidentBundle.ts` for the full schema.
 1. Go to **Import**
 2. Paste incident JSON or upload a `.json` file
 3. Click **Save to samples**
-
    - Requires the API to be running
    - Writes to `samples/incidents/` and updates `manifest.json`
    - On Vercel, Import is read-only; run locally to add incidents
