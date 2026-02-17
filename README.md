@@ -2,6 +2,8 @@
 
 _AI-powered service mesh incident debugger_ 🦝
 
+![Cover](public/assets/cover.png)
+
 [![CI](https://github.com/NickTheDevOpsGuy/meshlens-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/NickTheDevOpsGuy/meshlens-ai/actions/workflows/ci.yml)
 ![Last Commit](https://img.shields.io/github/last-commit/NickTheDevOpsGuy/meshlens-ai)
 ![Built with React](https://img.shields.io/badge/Built%20with-React-61dafb?logo=react&logoColor=white)
