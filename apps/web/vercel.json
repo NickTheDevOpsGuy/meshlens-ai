@@ -1,4 +1,11 @@
 {
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @meshlens/web build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "functions": {
+    "api/[[...path]].ts": {
+      "includeFiles": "public/samples/**"
+    }
+  }
 }
