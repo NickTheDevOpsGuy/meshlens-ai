@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "./src/app.ts",
+  "exports": { ".": "./src/app.ts" },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "echo 'API uses tsx at runtime'",

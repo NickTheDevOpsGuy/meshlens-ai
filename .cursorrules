@@ -1,0 +1,59 @@
+# Meshlens AI — Cursor Rules
+
+## Project overview
+
+Meshlens AI is an AI-powered service mesh incident debugger. Monorepo with React frontend, Hono API, and shared TypeScript types.
+
+## Tech stack
+
+- **Frontend**: React 19, Vite 6, Tailwind CSS v4, React Router 7
+- **Backend**: Hono (Node), Vercel serverless
+- **AI**: Tetrate Agent Router Service (TARS)
+- **Tooling**: pnpm, TypeScript 5.7, ESLint, Prettier
+
+## Monorepo structure
+
+```
+apps/
+  api/          # Hono API (port 3001)
+  web/          # React + Vite (port 5173)
+packages/
+  shared/       # @meshlens/shared — IncidentBundle, types
+api/            # Vercel serverless entry (repo root) — imports @meshlens/api
+samples/        # Incident JSON + manifest
+```
+
+## Code conventions
+
+- **Formatting**: Prettier (semi, double quotes, 2 spaces, trailing comma es5)
+- **Linting**: ESLint + TypeScript ESLint + React hooks. Run `pnpm run lint:fix` before commits.
+- **Tests**: Vitest. Run `pnpm run test`. API tests in `apps/api/src/app.test.ts`.
+- **Pre-push**: Husky runs precheck (format, lint, tsc, tests). Bypass with `[skip-precheck]` in commit message only when necessary.
+
+## Important patterns
+
+1. **Shared types**: Use `@meshlens/shared` for `IncidentBundle`, `FiringAlert`, etc. No duplicate type definitions.
+2. **API routes**: Hono app in `apps/api/src/app.ts`. All routes under `/api/*`.
+3. **Vercel deployment**: Root Directory must be **empty** (repo root) so `api/[[...path]].ts` is found. Do not set Root Directory to `apps/web`.
+4. **Settings**: User settings (Prometheus, Jaeger, TARS key) in `localStorage` via `useSettings` hook.
+5. **Samples**: Incident JSON in `samples/incidents/` and `apps/web/public/samples/incidents/`. Manifest at `manifest.json`.
+
+## API flow
+
+- Local: Vite proxies `/api` → `http://localhost:3001`
+- Vercel: `api/[[...path]].ts` at repo root forwards to Hono app
+- `TETRATE_API_KEY` in env for AI analysis. Add `NODEJS_HELPERS=0` if POST/body fails on Vercel.
+
+## File locations
+
+- Incident detail, AI analysis: `apps/web/src/pages/IncidentDetailPage.tsx`
+- Dashboard, incident list: `apps/web/src/pages/DashboardPage.tsx`
+- API routes, TARS integration: `apps/api/src/app.ts`
+- Settings page: `apps/web/src/pages/SettingsPage.tsx`
+- Sample data fallback: `apps/web/src/data/sampleIncidents.ts`
+
+## Avoid
+
+- Changing Root Directory to `apps/web` in Vercel — breaks `/api/*` routing
+- Adding types that belong in `@meshlens/shared` elsewhere
+- Committing without running `pnpm run precheck` (or `format` + `lint` + `test`)

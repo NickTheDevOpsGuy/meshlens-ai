@@ -8,10 +8,10 @@ Meshlens AI deploys to Vercel with the web app and API as serverless functions.
 
 1. Import the repo at [vercel.com](https://vercel.com)
 2. **Project Settings** → **Build & Development**:
-   - **Root Directory**: `apps/web`
+   - **Root Directory**: leave **empty** (repo root) — required for `/api/*` functions
    - **Framework Preset**: Vite or React
    - **Include source files outside of the Root Directory**: enable
-3. Add env vars (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`
+3. Add env vars (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`. If POST requests fail, add `NODEJS_HELPERS=0`.
 
 ### Behavior on Vercel
 

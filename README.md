@@ -121,11 +121,11 @@ _AI-powered service mesh incident debugger_ 🦝
 
 1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
 2. **Project Settings** → **General** → **Build & Development Settings**:
-   - **Root Directory**: `apps/web`
-   - **Framework Preset**: `Vite` or `React`
+   - **Root Directory**: leave **empty** (repo root) — required for `/api/*` serverless functions
+   - **Framework Preset**: Vite or React
    - **Include source files outside of the Root Directory**: enable (for monorepo)
-   - Build/Output/Install: leave auto-detected or use `pnpm run build`, `dist`, `pnpm install`
-3. **Environment variables** (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`
+   - Build: `pnpm --filter @meshlens/web build` · Output: `apps/web/dist` · Install: `pnpm install`
+3. **Environment variables** (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`. If POST/body requests fail, add `NODEJS_HELPERS=0` (see [Hono on Vercel](https://hono.dev/getting-started/vercel)).
 
 The API runs as serverless functions at `/api/*`. Sample incidents are read from the repo; **Import** is read-only on Vercel.
 
