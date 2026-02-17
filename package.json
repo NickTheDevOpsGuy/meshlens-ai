@@ -14,7 +14,10 @@
     "precheck": "bash scripts/precheck.sh",
     "prepare": "husky"
   },
-  "dependencies":{"@meshlens/api":"workspace:*"},"devDependencies": {
+  "dependencies": {
+    "@meshlens/api": "workspace:*"
+  },
+  "devDependencies": {
     "concurrently": "^9.1.0",
     "husky": "^9.1.7",
     "prettier": "^3.8.1",

@@ -8,6 +8,7 @@ Base URL: https://api.router.tetrate.ai/v1
 API Key generation: https://router.tetrate.ai/api-keys
 
 It applies to deployments on:
+
 - Supabase
 - Fly.io
 - AWS / GCP / Azure
@@ -79,7 +80,9 @@ All AI calls must originate from trusted server infrastructure.
 TARS exposes two OpenAI-compatible endpoints:
 
 ## 1. Chat Completions
+
 Used for:
+
 - Text generation
 - Extraction
 - Reasoning
@@ -89,7 +92,9 @@ Endpoint:
 POST /chat/completions
 
 ## 2. Embeddings
+
 Used for:
+
 - Semantic search
 - Retrieval-Augmented Generation (RAG)
 - Similarity matching
@@ -194,11 +199,11 @@ create extension if not exists vector;
 Example table:
 
 create table documents (
-  id bigserial primary key,
-  content text not null,
-  embedding vector(1536),
-  metadata jsonb default '{}'::jsonb,
-  created_at timestamptz default now()
+id bigserial primary key,
+content text not null,
+embedding vector(1536),
+metadata jsonb default '{}'::jsonb,
+created_at timestamptz default now()
 );
 
 Index:
