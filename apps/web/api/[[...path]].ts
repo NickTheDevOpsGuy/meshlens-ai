@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { app } from "@meshlens/api";
+import { app } from "../../../apps/api/src/app";
 
 async function toWebRequest(req: IncomingMessage): Promise<Request> {
   const protocol = (req.headers["x-forwarded-proto"] as string) ?? "https";
