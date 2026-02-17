@@ -2530,7 +2530,7 @@ app.get("/api/jaeger/traces", async (c) => {
   }
 });
 
-// src/api/[[...path]].ts
+// src/api/ai/analyze.ts
 async function toWebRequest(req) {
   const protocol = req.headers["x-forwarded-proto"] ?? "https";
   const host = req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost";
