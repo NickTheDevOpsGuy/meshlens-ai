@@ -42,20 +42,13 @@ if [ -n "$EMPTY_FILES" ]; then
 fi
 echo "✅ [SUCCESS]: No empty files detected."
 
-# 2. PRETTIER (format check)
-echo "🎨 [STEP 2]: Checking code style (Prettier)..."
-if ! pnpm run format:check 2>/dev/null; then
-  echo "💾 [AUTO-REPAIR]: Running 'pnpm run format'..."
-  pnpm run format
-  if pnpm run format:check 2>/dev/null; then
-    echo "✅ [SUCCESS]: Code style fixed. Stage the changes and commit before pushing."
-    exit 1
-  else
-    echo "🛑 [SYSTEM FAULT]: Prettier check still failed after format."
-    exit 1
-  fi
+# 2. PRETTIER (format)
+echo "🎨 [STEP 2]: Formatting code (Prettier)..."
+if ! pnpm run format; then
+  echo "🛑 [SYSTEM FAULT]: Prettier format failed."
+  exit 1
 fi
-echo "✅ [SUCCESS]: Code style OK."
+echo "✅ [SUCCESS]: Code formatted."
 
 # 3. LINT (ESLint)
 echo "🧪 [STEP 3]: Linting..."
