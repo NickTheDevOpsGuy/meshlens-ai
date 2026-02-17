@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webDir = path.join(__dirname, "..");
 const apiDir = path.join(webDir, "api");
-const entry = path.join(apiDir, "[[...path]].ts");
+const entry = path.join(webDir, "src", "api", "[[...path]].ts");
 const outfile = path.join(apiDir, "[[...path]].js");
 
 await esbuild.build({
@@ -18,9 +18,6 @@ await esbuild.build({
   outfile,
   target: "node20",
 });
-
-// Remove the .ts source so Vercel only sees the compiled .js
-fs.unlinkSync(entry);
 
 // Also copy to repo root api/ so it works when Vercel Root Directory is empty
 const rootApiDir = path.join(webDir, "..", "..", "api");
