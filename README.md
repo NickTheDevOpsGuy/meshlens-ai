@@ -30,6 +30,8 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ![Meshlens AI Dashboard](./apps/web/public/preview.png)
 
+**[→ Watch demo](https://meshlens-ai-api.vercel.app/assets/demo.gif)** (AI root cause analysis in action)
+
 ---
 
 ## 🚀 Features
@@ -175,17 +177,170 @@ Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/depen
 
 ## 📂 Project Structure
 
-```
-├── apps/
-│   ├── api/              # Hono API (port 3001, Vercel serverless)
-│   └── web/              # React + Vite app (port 5173)
-│       ├── api/          # Vercel serverless entry
-│       └── src/
-├── packages/shared/      # Incident types, schemas
-├── samples/incidents/    # JSON incident bundles
-└── vercel.json
-```
+<details>
+<summary>📁 Click to expand file structure</summary>
 
+```
+.
+├── .github
+│   ├── ISSUE_TEMPLATE
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   ├── workflows
+│   │   ├── ci.yml
+│   │   ├── release.yml
+│   │   └── vercel-production.yml
+│   ├── dependabot.yml
+│   └── PULL_REQUEST_TEMPLATE.md
+├── .husky
+│   ├── pre-commit
+│   └── pre-push
+├── api
+│   ├── ai
+│   │   └── analyze.js
+│   ├── samples
+│   │   ├── incidents.js
+│   │   └── version.js
+│   ├── [[...path]].js
+│   └── health.js
+├── apps
+│   ├── api
+│   │   ├── src
+│   │   │   ├── app.test.ts
+│   │   │   ├── app.ts
+│   │   │   ├── index.ts
+│   │   │   └── serve.ts
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── vitest.config.ts
+│   └── web
+│       ├── api
+│       │   ├── ai
+│       │   │   └── analyze.js
+│       │   ├── samples
+│       │   │   ├── incidents.js
+│       │   │   └── version.js
+│       │   ├── [[...path]].js
+│       │   └── health.js
+│       ├── public
+│       │   ├── docs
+│       │   │   ├── configuration.md
+│       │   │   ├── deployment.md
+│       │   │   ├── getting-started.md
+│       │   │   ├── incidents.md
+│       │   │   ├── overview.md
+│       │   │   ├── prometheus-slo-recording-rules.md
+│       │   │   └── runbooks.md
+│       │   ├── samples
+│       │   │   └── incidents
+│       │   │       ├── config-rollback.json
+│       │   │       ├── manifest.json
+│       │   │       ├── memory-leak.json
+│       │   │       └── network-partition.json
+│       │   ├── favicon.svg
+│       │   └── preview.png
+│       ├── scripts
+│       │   └── build-api.mjs
+│       ├── src
+│       │   ├── api
+│       │   │   ├── ai
+│       │   │   │   └── analyze.ts
+│       │   │   ├── samples
+│       │   │   │   ├── incidents.ts
+│       │   │   │   └── version.ts
+│       │   │   ├── _handler.ts
+│       │   │   ├── [[...path]].ts
+│       │   │   └── health.ts
+│       │   ├── components
+│       │   │   ├── ErrorBoundary.tsx
+│       │   │   └── Layout.tsx
+│       │   ├── data
+│       │   │   ├── sampleIncidents.ts
+│       │   │   └── sampleSLOs.ts
+│       │   ├── hooks
+│       │   │   ├── useIncidents.ts
+│       │   │   └── useSettings.ts
+│       │   ├── pages
+│       │   │   ├── DashboardPage.tsx
+│       │   │   ├── DocsPage.tsx
+│       │   │   ├── HomePage.tsx
+│       │   │   ├── ImportPage.tsx
+│       │   │   ├── IncidentDetailPage.tsx
+│       │   │   ├── ObservabilityPage.tsx
+│       │   │   ├── RunbookPage.tsx
+│       │   │   ├── ServiceMapPage.tsx
+│       │   │   ├── SettingsPage.tsx
+│       │   │   ├── SLOPage.tsx
+│       │   │   └── TimelinePage.tsx
+│       │   ├── services
+│       │   │   ├── alerts.ts
+│       │   │   ├── incidents.test.ts
+│       │   │   ├── incidents.ts
+│       │   │   └── telemetry.ts
+│       │   ├── utils
+│       │   │   ├── incidentUtils.test.ts
+│       │   │   └── incidentUtils.ts
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── eslint.config.js
+│       ├── index.html
+│       ├── package.json
+│       ├── tsconfig.json
+│       ├── tsconfig.node.json
+│       ├── tsconfig.node.tsbuildinfo
+│       ├── tsconfig.tsbuildinfo
+│       ├── vercel.json
+│       └── vite.config.ts
+├── docs
+│   ├── configuration.md
+│   ├── deployment.md
+│   ├── getting-started.md
+│   ├── incidents.md
+│   ├── prometheus-slo-recording-rules.md
+│   ├── README.md
+│   └── runbooks.md
+├── packages
+│   └── shared
+│       ├── src
+│       │   ├── incidentBundle.ts
+│       │   └── index.ts
+│       ├── package.json
+│       └── tsconfig.json
+├── public
+│   └── assets
+├── samples
+│   ├── incidents
+│   │   ├── config-rollback.json
+│   │   ├── manifest.json
+│   │   ├── memory-leak.json
+│   │   ├── network-partition.json
+│   │   └── README.md
+│   └── prometheus
+│       └── slo-recording-rules.yml
+├── scripts
+│   ├── check-bundle-size.sh
+│   └── precheck.sh
+├── .cursorrules
+├── .dockerignore
+├── .editorconfig
+├── .env.example
+├── .gitignore
+├── .prettierignore
+├── .prettierrc
+├── AGENTS.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── docker-compose.yml
+├── Dockerfile
+├── LICENSE
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── README.md
+└── SECURITY.md
+```
+</details>
 ---
 
 ## 🗓️ Roadmap
