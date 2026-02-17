@@ -19,6 +19,9 @@ await esbuild.build({
   target: "node20",
 });
 
+// Remove the .ts source so Vercel only sees the compiled .js
+fs.unlinkSync(entry);
+
 // Also copy to repo root api/ so it works when Vercel Root Directory is empty
 const rootApiDir = path.join(webDir, "..", "..", "api");
 if (!fs.existsSync(rootApiDir)) {
