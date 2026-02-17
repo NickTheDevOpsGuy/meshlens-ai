@@ -11,7 +11,7 @@
     }
   ],
   "functions": {
-    "api/[[...path]].js": {
+    "api/[[...path]].ts": {
       "includeFiles": "public/samples/**"
     }
   }
