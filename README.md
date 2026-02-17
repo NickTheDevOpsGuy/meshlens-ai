@@ -28,7 +28,9 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🖼 Preview
 
-> 📸 _Add screenshots: `./apps/web/public/preview.png` or record a short GIF of the Dashboard and Incident Detail flow._
+![Meshlens AI Dashboard](apps/web/public/preview.png)
+
+> 📹 _[Demo video](#) — Add your Loom/YouTube link here when ready._
 
 ---
 
@@ -97,7 +99,7 @@ _AI-powered service mesh incident debugger_ 🦝
    ```
 
    Edit `.env` and add your **Tetrate Agent Router Service (TARS)** API key:
-   - Sign up at [router.tetrate.ai](https://router.tetrate.ai/)
+   - Sign in at [router.tetrate.ai](https://router.tetrate.ai/api-keys)
    - Get your API key from [API keys](https://router.tetrate.ai/api-keys)
    - Set `TETRATE_API_KEY` in `.env`
 
@@ -121,10 +123,10 @@ _AI-powered service mesh incident debugger_ 🦝
 
 1. **Connect the repo** to [Vercel](https://vercel.com) (import from GitHub).
 2. **Project Settings** → **General** → **Build & Development Settings**:
-   - **Root Directory**: `apps/web`
+   - **Root Directory**: leave empty (repo root) — required so `/api/*` serverless functions are found
    - **Framework Preset**: `Vite` or `React`
    - **Include source files outside of the Root Directory**: enable (for monorepo)
-   - Build/Output/Install: leave auto-detected or use `pnpm run build`, `dist`, `pnpm install`
+   - Build/Output/Install: use `pnpm --filter @meshlens/web build`, `apps/web/dist`, `pnpm install`
 3. **Environment variables** (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`
 
 The API runs as serverless functions at `/api/*`. Sample incidents are read from the repo; **Import** is read-only on Vercel.

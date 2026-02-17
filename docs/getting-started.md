@@ -17,7 +17,7 @@ pnpm install
 
 To use **Analyze with AI**, you need a TARS API key:
 
-1. Sign up at [router.tetrate.ai](https://router.tetrate.ai/)
+1. Sign in at [router.tetrate.ai](https://router.tetrate.ai/api-keys)
 2. Create an API key at [API keys](https://router.tetrate.ai/api-keys)
 3. Copy `.env.example` to `.env` and add your key:
 

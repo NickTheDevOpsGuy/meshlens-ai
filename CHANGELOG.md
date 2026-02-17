@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-02-13
+
 ### Added
 
+- Initial release: AI-powered service mesh incident debugger
+- Dashboard with incident list, severity/status filters, search
+- AI root cause analysis (TARS)
+- Incident correlation (by service, by time)
+- Service topology visualization (sample + live Prometheus/Jaeger)
+- Incident timeline, SLO/SLI view, PDF export
+- Slack/PagerDuty integration
 - ESLint and Prettier for code quality
 - Husky pre-commit and pre-push hooks
 - CONTRIBUTING.md, SECURITY.md, CHANGELOG.md
