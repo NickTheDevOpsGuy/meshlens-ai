@@ -22,8 +22,8 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🔗 Live Demo
 
-- **[→ Try Meshlens AI](https://meshlens-ai-api.vercel.app)**
-- **[→ Docs](https://meshlens-ai-api.vercel.app/docs)**
+- [Try Meshlens AI](https://meshlens-ai-api.vercel.app)
+- [Docs](https://meshlens-ai-api.vercel.app/docs)
 
 ---
 
