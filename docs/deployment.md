@@ -11,7 +11,8 @@ Meshlens AI deploys to Vercel with the web app and API as serverless functions.
    - **Root Directory**: `apps/web`
    - **Framework Preset**: Vite or React
    - **Include source files outside of the Root Directory**: enable
-3. Add env vars (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`
+3. Add env vars (optional): `TETRATE_API_KEY`, `TARS_API_BASE_URL`, `TARS_MODEL`. Redeploy after adding.
+4. Verify: `curl -s https://your-project.vercel.app/api/health` should show `tarsConfigured: true`
 
 ### Behavior on Vercel
 

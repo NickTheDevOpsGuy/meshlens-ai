@@ -11,6 +11,17 @@
 
 Copy `.env.example` to `.env` and fill in values.
 
+### Verifying TARS configuration
+
+The `/api/health` endpoint returns whether TARS is configured:
+
+```bash
+curl -s https://your-deployment.vercel.app/api/health
+# {"status":"ok","tarsConfigured":true}
+```
+
+If `tarsConfigured` is `false`, the `TETRATE_API_KEY` environment variable is not set or not available to the serverless function. Add it in Vercel **Settings → Environment Variables** and redeploy.
+
 ## App settings (Settings page)
 
 These are stored in browser `localStorage` and can be changed in **Settings**:
@@ -22,7 +33,7 @@ These are stored in browser `localStorage` and can be changed in **Settings**:
 | **Prometheus URL**     | Metrics (Istio `istio_requests_total`, etc.). Used for live incidents and SLO. |
 | **Jaeger / Tempo URL** | Traces. Enables trace drill-down links and live topology.                      |
 | **Grafana URL**        | Optional. For linking to dashboards from the Observability hub.                |
-| **Loki URL**          | Optional. Logs. Shown on Observability hub for correlation with traces.        |
+| **Loki URL**           | Optional. Logs. Shown on Observability hub for correlation with traces.        |
 | **Alertmanager URL**   | Firing alerts surfaced as incidents on the dashboard.                          |
 
 These URLs appear on the **Observability** page, which provides a central hub for the three pillars of observability (metrics, traces, logs) plus dashboards and alerts.

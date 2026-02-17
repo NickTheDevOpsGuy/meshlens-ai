@@ -68,11 +68,9 @@ export default function ObservabilityPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-100">Observability</h1>
         <p className="text-slate-400 mt-1">
-          Central hub for metrics, traces, logs, and alerts. Configure backends in{" "}
-          <Link
-            to="/settings"
-            className="text-cyan-400 hover:underline"
-          >
+          Central hub for metrics, traces, logs, and alerts. Configure backends
+          in{" "}
+          <Link to="/settings" className="text-cyan-400 hover:underline">
             Settings
           </Link>
           .
@@ -144,7 +142,8 @@ export default function ObservabilityPage() {
             <span className="text-cyan-400 mt-0.5">•</span>
             <span>
               <strong className="text-slate-300">Metrics</strong> — Prometheus
-              for rates, histograms, and SLOs. Power live incidents and topology.
+              for rates, histograms, and SLOs. Power live incidents and
+              topology.
             </span>
           </li>
           <li className="flex items-start gap-2">

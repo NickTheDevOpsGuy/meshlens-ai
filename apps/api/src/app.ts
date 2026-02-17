@@ -49,7 +49,12 @@ app.use(
   })
 );
 
-app.get("/api/health", async (c) => c.json({ status: "ok" }));
+app.get("/api/health", async (c) =>
+  c.json({
+    status: "ok",
+    tarsConfigured: !!process.env.TETRATE_API_KEY,
+  })
+);
 
 function loadIncidentsFromFolder(): unknown[] {
   const incidents: unknown[] = [];

@@ -158,7 +158,7 @@ Add incident JSON files to `samples/incidents/` and list them in `manifest.json`
 
 ## 🤖 AI root cause analysis
 
-Click **"Analyze with AI"** on any incident. Add `TETRATE_API_KEY` to `.env` and restart the API.
+Click **"Analyze with AI"** on any incident. Add `TETRATE_API_KEY` to `.env` and restart the API. On Vercel, add the key in **Settings → Environment Variables** and redeploy. Verify with `curl https://your-deployment.vercel.app/api/health` — `tarsConfigured: true` means it's ready.
 
 ## 📡 Live telemetry & observability
 
