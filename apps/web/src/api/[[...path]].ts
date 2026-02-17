@@ -1,7 +1,9 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { app } from "@meshlens/api";
 
-async function toWebRequest(req: IncomingMessage & { body?: unknown }): Promise<Request> {
+async function toWebRequest(
+  req: IncomingMessage & { body?: unknown }
+): Promise<Request> {
   const protocol = (req.headers["x-forwarded-proto"] as string) ?? "https";
   const host =
     (req.headers["x-forwarded-host"] as string) ??

@@ -27,7 +27,9 @@ export default function DocsPage() {
     (async () => {
       try {
         const r = await fetch(`/docs/${doc.file}`);
-        const text = r.ok ? await r.text() : "# Not found\n\nDocument not found.";
+        const text = r.ok
+          ? await r.text()
+          : "# Not found\n\nDocument not found.";
         setMarkdown(text);
       } catch {
         setMarkdown("# Error\n\nFailed to load documentation.");
