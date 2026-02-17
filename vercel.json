@@ -3,5 +3,10 @@
   "outputDirectory": "apps/web/dist",
   "installCommand": "pnpm install",
   "framework": null,
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "functions": {
+    "api/[[...path]].ts": {
+      "includeFiles": "apps/web/public/samples/**"
+    }
+  }
 }
