@@ -28,9 +28,7 @@ _AI-powered service mesh incident debugger_ 🦝
 
 ## 🖼 Preview
 
-![Meshlens AI Dashboard](./apps/web/public/preview.png)
-
-**[→ Watch demo](https://meshlens-ai-api.vercel.app/assets/demo.gif)** (AI root cause analysis in action)
+![Demo](public/assets/demo.gif)
 
 ---
 
