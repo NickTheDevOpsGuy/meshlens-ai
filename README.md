@@ -340,8 +340,8 @@ Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/depen
 ├── README.md
 └── SECURITY.md
 ```
-</details>
----
+
+## </details>
 
 ## 🗓️ Roadmap
 
