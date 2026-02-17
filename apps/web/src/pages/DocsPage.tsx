@@ -24,11 +24,17 @@ export default function DocsPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/docs/${doc.file}`)
-      .then((r) => (r.ok ? r.text() : "# Not found\n\nDocument not found."))
-      .then(setMarkdown)
-      .catch(() => setMarkdown("# Error\n\nFailed to load documentation."))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const r = await fetch(`/docs/${doc.file}`);
+        const text = r.ok ? await r.text() : "# Not found\n\nDocument not found.";
+        setMarkdown(text);
+      } catch {
+        setMarkdown("# Error\n\nFailed to load documentation.");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [doc.file]);
 
   return (

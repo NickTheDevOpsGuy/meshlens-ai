@@ -49,7 +49,7 @@ app.use(
   })
 );
 
-app.get("/api/health", (c) => c.json({ status: "ok" }));
+app.get("/api/health", async (c) => c.json({ status: "ok" }));
 
 function loadIncidentsFromFolder(): unknown[] {
   const incidents: unknown[] = [];
@@ -85,7 +85,7 @@ app.get("/api/samples/incidents", async (c) => {
   return c.json(loadIncidentsFromFolder());
 });
 
-app.get("/api/samples/version", (c) =>
+app.get("/api/samples/version", async (c) =>
   c.json({ version: isVercel ? 0 : samplesVersion })
 );
 

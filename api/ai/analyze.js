@@ -2153,7 +2153,7 @@ app.use(
     origin: (origin) => !origin || origin.startsWith("http://localhost") || origin.startsWith("http://127.0.0.1") || origin.includes("vercel.app") ? origin || "*" : null
   })
 );
-app.get("/api/health", (c) => c.json({ status: "ok" }));
+app.get("/api/health", async (c) => c.json({ status: "ok" }));
 function loadIncidentsFromFolder() {
   const incidents = [];
   try {
@@ -2183,7 +2183,7 @@ app.get("/api/samples/incidents", async (c) => {
 });
 app.get(
   "/api/samples/version",
-  (c) => c.json({ version: isVercel ? 0 : samplesVersion })
+  async (c) => c.json({ version: isVercel ? 0 : samplesVersion })
 );
 app.post("/api/samples/incidents", async (c) => {
   if (isVercel) {
@@ -2541,9 +2541,13 @@ async function toWebRequest(req) {
   }
   let body;
   if (req.method !== "GET" && req.method !== "HEAD") {
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    body = Buffer.concat(chunks).buffer;
+    if (req.body !== void 0) {
+      body = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
+    } else {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      body = Buffer.concat(chunks).buffer;
+    }
   }
   return new Request(url, { method: req.method ?? "GET", headers, body });
 }
@@ -2556,11 +2560,14 @@ async function handler(req, res) {
     const buf = await response.arrayBuffer();
     res.end(Buffer.from(buf));
   } catch (err) {
+    const msg = err instanceof Error ? err.message : "Internal error";
+    console.error("[api/ai/analyze]", msg, err);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(
       JSON.stringify({
-        error: err instanceof Error ? err.message : "Internal error"
+        error: msg,
+        ...process.env.NODE_ENV !== "production" && err instanceof Error && { stack: err.stack }
       })
     );
   }

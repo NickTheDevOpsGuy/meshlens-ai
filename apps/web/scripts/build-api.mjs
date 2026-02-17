@@ -10,8 +10,14 @@ const apiDir = path.join(webDir, "api");
 const rootApiDir = path.join(webDir, "..", "..", "api");
 
 const entries = [
-  { in: path.join(webDir, "src", "api", "[[...path]].ts"), out: "[[...path]].js" },
-  { in: path.join(webDir, "src", "api", "ai", "analyze.ts"), out: "ai/analyze.js" },
+  {
+    in: path.join(webDir, "src", "api", "[[...path]].ts"),
+    out: "[[...path]].js",
+  },
+  {
+    in: path.join(webDir, "src", "api", "ai", "analyze.ts"),
+    out: "ai/analyze.js",
+  },
 ];
 
 for (const { in: entry, out: outRel } of entries) {

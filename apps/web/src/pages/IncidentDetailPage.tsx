@@ -121,8 +121,10 @@ export default function IncidentDetailPage() {
     URL.revokeObjectURL(a.href);
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard?.writeText(window.location.href);
+  const handleCopyLink = async () => {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(window.location.href);
+    }
   };
 
   const handleExportPdf = async () => {

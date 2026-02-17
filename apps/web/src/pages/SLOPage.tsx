@@ -16,14 +16,19 @@ export default function SLOPage() {
 
   useEffect(() => {
     if (!settings.prometheusUrl) return;
-    fetch("/api/prometheus/slo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ baseUrl: settings.prometheusUrl }),
-    })
-      .then((r) => r.json())
-      .then((data) => setLiveSLOs(Array.isArray(data) ? data : null))
-      .catch(() => setLiveSLOs(null));
+    (async () => {
+      try {
+        const r = await fetch("/api/prometheus/slo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ baseUrl: settings.prometheusUrl }),
+        });
+        const data = await r.json();
+        setLiveSLOs(Array.isArray(data) ? data : null);
+      } catch {
+        setLiveSLOs(null);
+      }
+    })();
   }, [settings.prometheusUrl]);
 
   const slos =

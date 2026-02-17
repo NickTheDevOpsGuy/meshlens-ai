@@ -29,15 +29,19 @@ export default function ServiceMapPage() {
     if (!hasTelemetry || !useLive) return;
     setLiveLoading(true);
     setLiveError(null);
-    fetchLiveTopology(
-      settings.prometheusUrl || undefined,
-      settings.traceUrl || undefined
-    )
-      .then(setLiveGraph)
-      .catch((e) =>
-        setLiveError(e instanceof Error ? e.message : "Failed to fetch")
-      )
-      .finally(() => setLiveLoading(false));
+    (async () => {
+      try {
+        const graph = await fetchLiveTopology(
+          settings.prometheusUrl || undefined,
+          settings.traceUrl || undefined
+        );
+        setLiveGraph(graph);
+      } catch (e) {
+        setLiveError(e instanceof Error ? e.message : "Failed to fetch");
+      } finally {
+        setLiveLoading(false);
+      }
+    })();
   }, [hasTelemetry, useLive, settings.prometheusUrl, settings.traceUrl]);
 
   const graph = useLive && liveGraph ? liveGraph : sampleGraph;

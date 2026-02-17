@@ -35,37 +35,43 @@ export function useIncidents() {
   const refreshInterval =
     settings.refreshIntervalSec > 0 ? settings.refreshIntervalSec * 1000 : 0;
 
-  const fetchLive = useCallback(() => {
+  const fetchLive = useCallback(async () => {
     if (!hasTelemetry) return;
     setLiveLoading(true);
     setError(null);
-    fetchLiveIncidents(
-      settings.prometheusUrl || undefined,
-      settings.traceUrl || undefined
-    )
-      .then(setLiveIncidents)
-      .catch((e) =>
-        setError(e instanceof Error ? e.message : "Telemetry fetch failed")
-      )
-      .finally(() => setLiveLoading(false));
+    try {
+      const incidents = await fetchLiveIncidents(
+        settings.prometheusUrl || undefined,
+        settings.traceUrl || undefined
+      );
+      setLiveIncidents(incidents);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Telemetry fetch failed");
+    } finally {
+      setLiveLoading(false);
+    }
   }, [hasTelemetry, settings.prometheusUrl, settings.traceUrl]);
 
-  const fetchAlerts = useCallback(() => {
+  const fetchAlerts = useCallback(async () => {
     if (!hasAlertmanager) return;
-    fetchFiringAlerts(settings.alertmanagerUrl)
-      .then((a) => setAlertIncidents(alertsToIncidents(a)))
-      .catch(() => setAlertIncidents([]));
+    try {
+      const alerts = await fetchFiringAlerts(settings.alertmanagerUrl);
+      setAlertIncidents(alertsToIncidents(alerts));
+    } catch {
+      setAlertIncidents([]);
+    }
   }, [hasAlertmanager, settings.alertmanagerUrl]);
 
   const [apiAvailable, setApiAvailable] = useState(false);
-  const refetchSamples = useCallback(() => {
+  const refetchSamples = useCallback(async () => {
     setLoading(true);
-    loadSampleIncidents()
-      .then(({ incidents, apiAvailable: ok }) => {
-        setSampleIncidents(incidents);
-        setApiAvailable(ok);
-      })
-      .finally(() => setLoading(false));
+    try {
+      const { incidents, apiAvailable: ok } = await loadSampleIncidents();
+      setSampleIncidents(incidents);
+      setApiAvailable(ok);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
