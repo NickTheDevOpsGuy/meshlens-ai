@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/observability", label: "Observability" },
   { to: "/docs", label: "Docs" },
   { to: "/topology", label: "Service Map" },
   { to: "/timeline", label: "Timeline" },

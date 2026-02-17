@@ -13,6 +13,7 @@ const defaults: Settings = {
   traceUrl: "",
   grafanaUrl: "",
   alertmanagerUrl: "",
+  lokiUrl: "",
   refreshIntervalSec: 0,
   slackWebhookUrl: "",
   pagerdutyIntegrationKey: "",
@@ -161,6 +162,20 @@ export default function SettingsPage() {
                     ...s,
                     alertmanagerUrl: e.target.value,
                   }))
+                }
+                className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-2">
+                Loki URL (optional)
+              </label>
+              <input
+                type="url"
+                placeholder="http://loki:3100"
+                value={settings.lokiUrl ?? ""}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, lokiUrl: e.target.value }))
                 }
                 className="w-full px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 font-mono text-sm"
               />

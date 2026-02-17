@@ -40,4 +40,5 @@ Use the sidebar to navigate between pages.
 
 - **Frontend**: React SPA. Settings stored in `localStorage`.
 - **API**: Hono server that proxies Prometheus, Jaeger, Alertmanager; runs AI analysis via TARS; serves sample incidents from `samples/incidents/`.
+- **Observability**: The **Observability** page is a central hub for metrics (Prometheus), traces (Jaeger/Tempo), logs (Loki), dashboards (Grafana), and alerts (Alertmanager). Configure URLs in Settings to get quick links to each tool.
 - **Live telemetry**: Optional. When Prometheus/Jaeger URLs are configured, the dashboard fetches live incidents and topology.

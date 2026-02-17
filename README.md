@@ -42,6 +42,7 @@ _AI-powered service mesh incident debugger_ 🦝
 - **SLO/SLI view** – Service level objectives vs actuals (sample + live Prometheus)
 - **PDF export** – Export incident reports with AI analysis, root cause, recommendations
 - **Hot-reload samples** – API watches `samples/incidents/`; dashboard auto-refreshes on Import
+- **Observability hub** – Central page for metrics (Prometheus), traces (Jaeger/Tempo), logs (Loki), dashboards (Grafana), and alerts (Alertmanager)
 - **Alertmanager integration** – Firing alerts surfaced as incidents
 - **Export / share** – Export JSON, copy shareable link, notify Slack/PagerDuty
 - **Runbook links** – Associate runbooks with incidents
@@ -145,8 +146,9 @@ Then open http://localhost:3000. Set `TETRATE_API_KEY` in `.env` for AI analysis
 2. Click an incident to open its **Incident Detail** page.
 3. Click **"Analyze with AI"** (requires `TETRATE_API_KEY` in `.env`).
 4. Use **Export PDF** to download a report.
-5. Toggle **View** to "Group by service" or "Correlated" on the Dashboard.
-6. Go to **Import** to paste or upload JSON (needs API running locally).
+5. Visit **Observability** to see configured telemetry backends and quick links to Prometheus, Grafana, Jaeger, Loki, and Alertmanager.
+6. Toggle **View** to "Group by service" or "Correlated" on the Dashboard.
+7. Go to **Import** to paste or upload JSON (needs API running locally).
 
 ---
 
@@ -158,15 +160,16 @@ Add incident JSON files to `samples/incidents/` and list them in `manifest.json`
 
 Click **"Analyze with AI"** on any incident. Add `TETRATE_API_KEY` to `.env` and restart the API.
 
-## 📡 Live telemetry
+## 📡 Live telemetry & observability
 
-When Prometheus or Jaeger URLs are configured in Settings:
+When Prometheus, Jaeger, Grafana, Loki, or Alertmanager URLs are configured in **Settings**:
 
-- **Dashboard** fetches live incidents (high error rates from Istio metrics)
-- **Service Map** shows "Load live topology" for the live graph
-- The API proxies requests to avoid CORS
+- **Observability** – Hub page shows configured backends and quick links to each tool
+- **Dashboard** – Fetches live incidents (high error rates from Istio metrics)
+- **Service Map** – Shows "Load live topology" for the live graph
+- The API proxies requests to Prometheus, Jaeger, and Alertmanager to avoid CORS
 
-Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/dependencies` provides the service graph.
+Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/dependencies` provides the service graph. Loki (logs) and Grafana (dashboards) URLs enable linking from the Observability page.
 
 ---
 
@@ -191,6 +194,7 @@ Prometheus must scrape `istio_requests_total` (or similar). Jaeger's `/api/depen
 - [x] Incident correlation/grouping
 - [x] Hot-reload samples
 - [x] Prometheus SLO recording rules (see [docs/prometheus-slo-recording-rules.md](./docs/prometheus-slo-recording-rules.md))
+- [x] Observability hub (metrics, traces, logs, dashboards, alerts)
 
 ---
 

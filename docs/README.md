@@ -23,7 +23,7 @@ In the app, open **Docs** in the nav or go to `/docs`. On GitHub, browse the mar
 | Page                                                                  | Description                                             |
 | --------------------------------------------------------------------- | ------------------------------------------------------- |
 | [Getting Started](./getting-started.md)                               | Install, run, and first steps                           |
-| [Configuration](./configuration.md)                                   | TARS, Prometheus, Jaeger, Alertmanager, Slack/PagerDuty |
+| [Configuration](./configuration.md)                                   | TARS, Prometheus, Jaeger, Loki, Grafana, Alertmanager, Slack/PagerDuty |
 | [Incidents & Import](./incidents.md)                                  | Sample data, import, incident lifecycle                 |
 | [Runbooks](./runbooks.md)                                             | Runbook links and templates                             |
 | [Deployment](./deployment.md)                                         | Vercel deployment                                       |

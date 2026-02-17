@@ -21,8 +21,11 @@ These are stored in browser `localStorage` and can be changed in **Settings**:
 | ---------------------- | ------------------------------------------------------------------------------ |
 | **Prometheus URL**     | Metrics (Istio `istio_requests_total`, etc.). Used for live incidents and SLO. |
 | **Jaeger / Tempo URL** | Traces. Enables trace drill-down links and live topology.                      |
-| **Grafana URL**        | Optional. For linking to dashboards.                                           |
+| **Grafana URL**        | Optional. For linking to dashboards from the Observability hub.                |
+| **Loki URL**          | Optional. Logs. Shown on Observability hub for correlation with traces.        |
 | **Alertmanager URL**   | Firing alerts surfaced as incidents on the dashboard.                          |
+
+These URLs appear on the **Observability** page, which provides a central hub for the three pillars of observability (metrics, traces, logs) plus dashboards and alerts.
 
 ### Notifications
 

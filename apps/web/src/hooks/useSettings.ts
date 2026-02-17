@@ -8,6 +8,7 @@ export type Settings = {
   traceUrl: string;
   grafanaUrl: string;
   alertmanagerUrl: string;
+  lokiUrl: string;
   refreshIntervalSec: number;
   slackWebhookUrl: string;
   pagerdutyIntegrationKey: string;
@@ -21,6 +22,7 @@ const defaults: Settings = {
   traceUrl: "",
   grafanaUrl: "",
   alertmanagerUrl: "",
+  lokiUrl: "",
   refreshIntervalSec: 0,
   slackWebhookUrl: "",
   pagerdutyIntegrationKey: "",

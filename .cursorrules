@@ -50,6 +50,7 @@ samples/        # Incident JSON + manifest
 - Dashboard, incident list: `apps/web/src/pages/DashboardPage.tsx`
 - API routes, TARS integration: `apps/api/src/app.ts`
 - Settings page: `apps/web/src/pages/SettingsPage.tsx`
+- Observability hub: `apps/web/src/pages/ObservabilityPage.tsx`
 - Sample data fallback: `apps/web/src/data/sampleIncidents.ts`
 
 ## Avoid

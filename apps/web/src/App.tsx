@@ -10,6 +10,7 @@ import SLOPage from "./pages/SLOPage";
 import ImportPage from "./pages/ImportPage";
 import RunbookPage from "./pages/RunbookPage";
 import DocsPage from "./pages/DocsPage";
+import ObservabilityPage from "./pages/ObservabilityPage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/incidents/:id" element={<IncidentDetailPage />} />
         <Route path="/topology" element={<ServiceMapPage />} />
+        <Route path="/observability" element={<ObservabilityPage />} />
         <Route path="/timeline" element={<TimelinePage />} />
         <Route path="/slo" element={<SLOPage />} />
         <Route path="/import" element={<ImportPage />} />
