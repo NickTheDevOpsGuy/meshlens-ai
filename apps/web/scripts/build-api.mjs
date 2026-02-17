@@ -18,6 +18,18 @@ const entries = [
     in: path.join(webDir, "src", "api", "ai", "analyze.ts"),
     out: "ai/analyze.js",
   },
+  {
+    in: path.join(webDir, "src", "api", "samples", "incidents.ts"),
+    out: "samples/incidents.js",
+  },
+  {
+    in: path.join(webDir, "src", "api", "samples", "version.ts"),
+    out: "samples/version.js",
+  },
+  {
+    in: path.join(webDir, "src", "api", "health.ts"),
+    out: "health.js",
+  },
 ];
 
 for (const { in: entry, out: outRel } of entries) {

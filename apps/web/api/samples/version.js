@@ -2536,7 +2536,7 @@ app.get("/api/jaeger/traces", async (c) => {
   }
 });
 
-// src/api/ai/analyze.ts
+// src/api/_handler.ts
 async function toWebRequest(req) {
   const protocol = req.headers["x-forwarded-proto"] ?? "https";
   const host = req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost";
@@ -2567,7 +2567,7 @@ async function handler(req, res) {
     res.end(Buffer.from(buf));
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
-    console.error("[api/ai/analyze]", msg, err);
+    console.error("[api]", msg, err);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(

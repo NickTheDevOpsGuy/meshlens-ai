@@ -18,6 +18,15 @@
     },
     "api/ai/analyze.js": {
       "includeFiles": "public/samples/**"
+    },
+    "api/samples/incidents.js": {
+      "includeFiles": "public/samples/**"
+    },
+    "api/samples/version.js": {
+      "includeFiles": "public/samples/**"
+    },
+    "api/health.js": {
+      "includeFiles": "public/samples/**"
     }
   }
 }
